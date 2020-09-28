@@ -11,6 +11,7 @@
 		FC4100902520EE0800F931CC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41008F2520EE0800F931CC /* ContentView.swift */; };
 		FC4100922520EE0900F931CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC4100912520EE0900F931CC /* Assets.xcassets */; };
 		FC4100952520EE0900F931CC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC4100942520EE0900F931CC /* Preview Assets.xcassets */; };
+		FC41009F2521083B00F931CC /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41009E2521083B00F931CC /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		FC4100912520EE0900F931CC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC4100942520EE0900F931CC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FC4100962520EE0900F931CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC41009E2521083B00F931CC /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +56,7 @@
 			children = (
 				FC41008D2520EE0800F931CC /* covid19App.swift */,
 				FC41008F2520EE0800F931CC /* ContentView.swift */,
+				FC41009E2521083B00F931CC /* ViewModel.swift */,
 				FC4100912520EE0900F931CC /* Assets.xcassets */,
 				FC4100962520EE0900F931CC /* Info.plist */,
 				FC4100932520EE0900F931CC /* Preview Content */,
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC4100902520EE0800F931CC /* ContentView.swift in Sources */,
+				FC41009F2521083B00F931CC /* ViewModel.swift in Sources */,
 				FC41008E2520EE0800F931CC /* covid19App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +281,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.atrinh.covid19;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -299,6 +304,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.atrinh.covid19;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
