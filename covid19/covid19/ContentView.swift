@@ -142,27 +142,20 @@ struct ContentView: View {
                 .padding(.vertical, 10)
             }
             Section {
-                Button(action: {
-                    openURL(URL(string: "https://apps.apple.com/gb/story/id1532087825")!)
-                }) {
+                Link(destination: URL(string: "https://apps.apple.com/gb/story/id1532087825")!) {
                     Label("Get the Contact Tracing app", systemImage: "figure.stand.line.dotted.figure.stand")
                         .padding(.vertical)
+                        .font(Font.body.bold())
                 }
-            }
-            Section {
-                Button(action: {
-                    openURL(URL(string: "https://www.gov.uk/guidance/the-r-number-in-the-uk")!)
-                }) {
+                Link(destination: URL(string: "https://www.gov.uk/guidance/the-r-number-in-the-uk")!) {
                     Label("R-number and Growth Rate", systemImage: "number")
                         .padding(.vertical)
+                        .font(Font.body.bold())
                 }
-            }
-            Section {
-                Button(action: {
-                    openURL(URL(string: "https://coronavirus.data.gov.uk")!)
-                }) {
+                Link(destination: URL(string: "https://coronavirus.data.gov.uk")!) {
                     Label("Source: coronavirus.data.gov.uk", systemImage: "link")
                         .padding(.vertical)
+                        .font(Font.body.bold())
                 }
             }
         }
