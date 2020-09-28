@@ -8,18 +8,6 @@
 import Foundation
 import Combine
 
-struct Info: Codable {
-    let date: String
-    let cases: Int?
-    let cumCases: Int?
-    let deaths: Int?
-    let cumDeaths: Int?
-}
-
-struct ResponseData: Codable {
-    let data: [Info]
-}
-
 class ViewModel: ObservableObject {
     @Published var data: [Info] = []
     @Published var lastUpdated: Date = Date.distantPast
@@ -196,13 +184,5 @@ class ViewModel: ObservableObject {
         let lastCheckedString = isReloading ? "Checking..." : "Last checked \(timeAgo(date: lastChecked))"
         
         footerText = isLoading ? "Loading..." : "\(lastUpdatedString)\n\n\(lastCheckedString)"
-    }
-}
-
-extension Int {
-    var formattedWithSeparator: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter.string(for:  NSNumber(value: self)) ?? ""
     }
 }

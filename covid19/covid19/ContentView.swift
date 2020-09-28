@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Charts
+import WidgetKit
 
 enum Location: String, CaseIterable, Identifiable {
     case uk = "🇬🇧 United Kingdom"
@@ -96,8 +97,8 @@ struct ContentView: View {
                     }
                     VStack(alignment: .leading) {
                         Text(viewModel.totalCases)
-                            .font(Font.title2.bold())
-                        Text("total")
+                            .font(Font.title2.bold()) +
+                        Text(" total")
                             .foregroundColor(.gray)
                     }
                 }
@@ -134,8 +135,8 @@ struct ContentView: View {
                     }
                     VStack(alignment: .leading) {
                         Text(viewModel.totalDeaths)
-                            .font(Font.title2.bold())
-                        Text("total")
+                            .font(Font.title2.bold()) +
+                        Text(" total")
                             .foregroundColor(.gray)
                     }
                 }
@@ -162,12 +163,14 @@ struct ContentView: View {
         .listStyle(InsetGroupedListStyle())
         .onAppear {
             reloadData()
+            WidgetCenter.shared.reloadTimelines(ofKind: "CasesWidget")
         }
         .onReceive(timer) { _ in
             updateIfNeeded()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             reloadData()
+            WidgetCenter.shared.reloadTimelines(ofKind: "CasesWidget")
         }
     }
     
