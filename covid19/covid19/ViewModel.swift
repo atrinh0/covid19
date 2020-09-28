@@ -25,6 +25,7 @@ class ViewModel: ObservableObject {
     @Published var lastUpdated: Date = Date.distantPast
     @Published var lastChecked: Date = Date.distantPast
     @Published var footerText = "Loading..."
+    private var error: String? = nil
     
     @Published var latestCases = "-"
     @Published var totalCases = "-"
@@ -45,10 +46,13 @@ class ViewModel: ObservableObject {
     }
     
     func fetchData(_ location: Location, clearData: Bool) {
+        error = nil
+        
         DispatchQueue.main.async {
             self.lastChecked = .distantPast
             
             if clearData {
+                self.data = []
                 self.lastUpdated = .distantPast
                 self.latestCases = "-"
                 self.totalCases = "-"
@@ -59,7 +63,7 @@ class ViewModel: ObservableObject {
                 self.latestDate = "-"
             }
 
-            self.updateData()
+            self.updateFooterText()
         }
         
         URLSession.shared.dataTaskPublisher(for: URL(string: urlForLocation(location: location))!)
@@ -77,7 +81,9 @@ class ViewModel: ObservableObject {
             }
             .decode(type: ResponseData.self, decoder: JSONDecoder())
             .sink(receiveCompletion: { completion in
-                print("\(completion)")
+                if case .failure(let error) = completion {
+                    self.error = error.localizedDescription
+                }
             }, receiveValue: { value in
                 DispatchQueue.main.async {
                     self.data = value.data
@@ -176,6 +182,11 @@ class ViewModel: ObservableObject {
     }
     
     @objc func updateFooterText() {
+        if let error = error {
+            footerText = error
+            return
+        }
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE dd MMMM yyyy 'at' h:mm a"
         let modified = dateFormatter.string(from: lastUpdated)
