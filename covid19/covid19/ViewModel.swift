@@ -24,20 +24,43 @@ class ViewModel: ObservableObject {
     @Published var data: [Info] = []
     @Published var lastUpdated: Date = Date.distantPast
     @Published var lastChecked: Date = Date.distantPast
-    @Published var footerText = "Loading..."
+    @Published var footerText = "Loading...\n"
     
-    var url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22date%22%3A%22date%22%2C%22cases%22%3A%22newCasesByPublishDate%22%2C%22cumCases%22%3A%22cumCasesByPublishDate%22%2C%22deaths%22%3A%22newDeaths28DaysByPublishDate%22%2C%22cumDeaths%22%3A%22cumDeaths28DaysByPublishDate%22%7D"
+    @Published var latestCases = "-"
+    @Published var totalCases = "-"
+    @Published var casesChange = ""
+    @Published var latestDeaths = "-"
+    @Published var totalDeaths = "-"
+    @Published var deathsChange = ""
+    
+    @Published var latestDate = "-"
+    
+    var url = "https://api.coronavirus.data.gov.uk/v1/data?filters=[FILTER]&structure=%7B%22date%22%3A%22date%22%2C%22cases%22%3A%22newCasesByPublishDate%22%2C%22cumCases%22%3A%22cumCasesByPublishDate%22%2C%22deaths%22%3A%22newDeaths28DaysByPublishDate%22%2C%22cumDeaths%22%3A%22cumDeaths28DaysByPublishDate%22%7D"
     var cancellable: Set<AnyCancellable> = Set()
     var timer: Timer?
     
     init() {
     }
     
-    func fetchData(_ location: Location) {
-        lastUpdated = .distantPast
-        lastChecked = .distantPast
+    func fetchData(_ location: Location, clearData: Bool) {
+        DispatchQueue.main.async {
+            self.lastChecked = .distantPast
+            
+            if clearData {
+                self.lastUpdated = .distantPast
+                self.latestCases = "-"
+                self.totalCases = "-"
+                self.casesChange = ""
+                self.latestDeaths = "-"
+                self.totalDeaths = "-"
+                self.deathsChange = ""
+                self.latestDate = "-"
+            }
+
+            self.updateData()
+        }
         
-        URLSession.shared.dataTaskPublisher(for: URL(string: url)!)
+        URLSession.shared.dataTaskPublisher(for: URL(string: urlForLocation(location: location))!)
             .map { output in
                 if let urlReponse = output.response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields["Last-Modified"] as? String {
                     let dateFormatter = DateFormatter()
@@ -57,7 +80,7 @@ class ViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.data = value.data
                     self.lastChecked = Date()
-                    self.updateFooterText()
+                    self.updateData()
                 }
             })
             .store(in: &cancellable)
@@ -65,27 +88,33 @@ class ViewModel: ObservableObject {
         timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateFooterText), userInfo: nil, repeats: true)
     }
-
-    @objc func updateFooterText() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE dd MMMM yyyy 'at' h:mm a"
-        let modified = dateFormatter.string(from: lastUpdated)
-            .replacingOccurrences(of: " AM", with: "am")
-            .replacingOccurrences(of: " PM", with: "pm")
-        let lastUpdatedString = "Last updated on \(modified)"
-        let lastCheckedString = "Last checked \(timeAgo(date: lastChecked))"
-        
-        footerText = "\(lastUpdatedString)\n\(lastCheckedString)"
+    
+    var isLoading: Bool {
+        abs(lastUpdated.timeIntervalSinceNow) > 60*60*24*120
     }
     
-    func isLoading() -> Bool {
-        if abs(lastUpdated.timeIntervalSinceNow) > 60*60*24*120 || abs(lastChecked.timeIntervalSinceNow) > 60*60*24*120 {
-            return true
-        }
-        return false
+    var isReloading: Bool {
+        abs(lastChecked.timeIntervalSinceNow) > 60*60*24*120
     }
     
     // MARK: - Helpers
+    
+    private func urlForLocation(location: Location) -> String {
+        var filter = "areaType=overview"
+        switch location {
+        case .uk:
+            filter = "areaType=overview"
+        case .england:
+            filter = "areaType=nation;areaName=england"
+        case .northernIreland:
+            filter = "areaType=nation;areaName=northern%20ireland"
+        case .scotland:
+            filter = "areaType=nation;areaName=scotland"
+        case .wales:
+            filter = "areaType=nation;areaName=wales"
+        }
+        return url.replacingOccurrences(of: "[FILTER]", with: filter)
+    }
     
     private func timeAgo(date: Date) -> String {
         let interval = abs(date.timeIntervalSinceNow)
@@ -96,5 +125,64 @@ class ViewModel: ObservableObject {
         }
         let minutes = Int(interval/60)
         return minutes == 1 ? "1 minute ago" : "\(minutes) minutes ago"
+    }
+    
+    private func updateData() {
+        updateFooterText()
+        if let latestRecord = data.first {
+            if let cases = latestRecord.cases, cases > 0 {
+                latestCases = "+\(cases.formattedWithSeparator)"
+            } else {
+                latestCases = "0"
+            }
+            if let deaths = latestRecord.deaths, deaths > 0 {
+                latestDeaths = "+\(deaths.formattedWithSeparator)"
+            } else {
+                latestDeaths = "0"
+            }
+            totalCases = latestRecord.cumCases?.formattedWithSeparator ?? "0"
+            totalDeaths = latestRecord.cumDeaths?.formattedWithSeparator ?? "0"
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            if let date = dateFormatter.date(from: latestRecord.date) {
+                dateFormatter.dateFormat = "EEEE dd MMMM"
+                latestDate = dateFormatter.string(from: date)
+            }
+            
+            if data.count > 1 {
+                let secondRecord = data[1]
+                if let cases = latestRecord.cases, let dayBeforeCases = secondRecord.cases {
+                    let difference = cases - dayBeforeCases
+                    let minusOrPlus = difference < 0 ? "-" : "+"
+                    casesChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
+                }
+                if let deaths = latestRecord.deaths, let dayBeforeDeaths = secondRecord.deaths {
+                    let difference = deaths - dayBeforeDeaths
+                    let minusOrPlus = difference < 0 ? "-" : "+"
+                    deathsChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
+                }
+            }
+        }
+    }
+    
+    @objc func updateFooterText() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE dd MMMM yyyy 'at' h:mm a"
+        let modified = dateFormatter.string(from: lastUpdated)
+            .replacingOccurrences(of: " AM", with: "am")
+            .replacingOccurrences(of: " PM", with: "pm")
+        let lastUpdatedString = "Last updated on \(modified)"
+        let lastCheckedString = isReloading ? "Reloading..." : "Last checked \(timeAgo(date: lastChecked))"
+        
+        footerText = isLoading ? "Loading...\n" : "\(lastUpdatedString)\n\(lastCheckedString)"
+    }
+}
+
+extension Int {
+    var formattedWithSeparator: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter.string(for:  NSNumber(value: self)) ?? ""
     }
 }

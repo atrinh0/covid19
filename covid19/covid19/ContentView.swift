@@ -26,10 +26,7 @@ struct ContentView: View {
     
     var body: some View {
         List {
-            Section(footer: Text(viewModel.footerText)
-                        .onReceive(timer) { _ in
-                            updateIfNeeded()
-                        }) {
+            Section(footer: Text(viewModel.footerText)) {
                 HStack() {
                     Text(locationSelection.rawValue)
                         .lineLimit(0)
@@ -45,8 +42,7 @@ struct ContentView: View {
                         }
                     }
                     .onChange(of: locationSelection) { _ in
-                        viewModel.fetchData(locationSelection)
-                        updateIfNeeded()
+                        reloadData()
                     }
                     .pickerStyle(MenuPickerStyle())
                 }
@@ -60,16 +56,17 @@ struct ContentView: View {
                         .resizable()
                         .scaledToFit()
                     VStack(alignment: .leading) {
-                        Text("+5,693")
-                            .font(Font.title2.bold()) +
-                            Text(" (-349)")
+                        Text(viewModel.latestCases)
+                            .font(Font.title2.bold())
+                            .foregroundColor(.orange) +
+                            Text(viewModel.casesChange)
                             .font(Font.title2.bold())
                             .foregroundColor(.gray)
-                        Text("new cases on Sunday 27 September")
+                        Text("new cases on \(viewModel.latestDate)")
                             .foregroundColor(.gray)
                     }
                     VStack(alignment: .leading) {
-                        Text("434,969")
+                        Text(viewModel.totalCases)
                             .font(Font.title2.bold())
                         Text("total")
                             .foregroundColor(.gray)
@@ -85,16 +82,17 @@ struct ContentView: View {
                         .resizable()
                         .scaledToFit()
                     VStack(alignment: .leading) {
-                        Text("+17")
-                            .font(Font.title2.bold()) +
-                            Text(" (-17)")
+                        Text(viewModel.latestDeaths)
+                            .font(Font.title2.bold())
+                            .foregroundColor(.red) +
+                            Text(viewModel.deathsChange)
                             .font(Font.title2.bold())
                             .foregroundColor(.gray)
-                        Text("new deaths on Sunday 27 September")
+                        Text("new deaths on \(viewModel.latestDate)")
                             .foregroundColor(.gray)
                     }
                     VStack(alignment: .leading) {
-                        Text("41,971")
+                        Text(viewModel.totalDeaths)
                             .font(Font.title2.bold())
                         Text("total")
                             .foregroundColor(.gray)
@@ -129,22 +127,28 @@ struct ContentView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .onAppear {
-            viewModel.fetchData(locationSelection)
+            reloadData()
+        }
+        .onReceive(timer) { _ in
             updateIfNeeded()
         }
     }
     
+    private func reloadData() {
+        viewModel.fetchData(locationSelection, clearData: true)
+        updateIfNeeded()
+    }
+    
     private func updateIfNeeded() {
-        if viewModel.isLoading() {
+        if viewModel.isLoading || viewModel.isReloading {
             return
         }
         
         // check every 15 minutes
         let interval = abs(viewModel.lastChecked.timeIntervalSinceNow)
         let seconds = Int(interval)
-        if seconds > 60*15 {
-            viewModel.fetchData(locationSelection)
-            updateIfNeeded()
+        if seconds > 15*60 {
+            viewModel.fetchData(locationSelection, clearData: false)
         }
     }
 }
