@@ -173,6 +173,9 @@ struct ContentView: View {
         .onReceive(timer) { _ in
             updateIfNeeded()
         }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            reloadData()
+        }
     }
     
     private func casesDPCount() -> Int {
