@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Shapes",
+        "repositoryURL": "https://github.com/swift-extensions/shapes.git",
+        "state": {
+          "branch": null,
+          "revision": "4181f01df194e5ee0c5937cc567ec97d16ef7362",
+          "version": "0.1.0"
+        }
+      },
+      {
+        "package": "Charts",
+        "repositoryURL": "https://github.com/swift-extensions/swiftui-charts",
+        "state": {
+          "branch": null,
+          "revision": "71eb769830dc70fd065debb47326eb01b6589e9d",
+          "version": "0.1.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,6 +12,7 @@
 		FC4100922520EE0900F931CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC4100912520EE0900F931CC /* Assets.xcassets */; };
 		FC4100952520EE0900F931CC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC4100942520EE0900F931CC /* Preview Assets.xcassets */; };
 		FC41009F2521083B00F931CC /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41009E2521083B00F931CC /* ViewModel.swift */; };
+		FC4100A925221F9300F931CC /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = FC4100A825221F9300F931CC /* Charts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC4100A925221F9300F931CC /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +90,9 @@
 			dependencies = (
 			);
 			name = covid19;
+			packageProductDependencies = (
+				FC4100A825221F9300F931CC /* Charts */,
+			);
 			productName = covid19;
 			productReference = FC41008A2520EE0800F931CC /* covid19.app */;
 			productType = "com.apple.product-type.application";
@@ -115,6 +120,9 @@
 				Base,
 			);
 			mainGroup = FC4100812520EE0800F931CC;
+			packageReferences = (
+				FC4100A725221F9300F931CC /* XCRemoteSwiftPackageReference "swiftui-charts" */,
+			);
 			productRefGroup = FC41008B2520EE0800F931CC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -334,6 +342,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FC4100A725221F9300F931CC /* XCRemoteSwiftPackageReference "swiftui-charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swift-extensions/swiftui-charts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FC4100A825221F9300F931CC /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC4100A725221F9300F931CC /* XCRemoteSwiftPackageReference "swiftui-charts" */;
+			productName = Charts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FC4100822520EE0800F931CC /* Project object */;
 }

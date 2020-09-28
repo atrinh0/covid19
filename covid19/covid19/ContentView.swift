@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Charts
 
 enum Location: String, CaseIterable, Identifiable {
     case uk = "🇬🇧 United Kingdom"
@@ -17,10 +18,21 @@ enum Location: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
+enum ChartCount: String, CaseIterable, Identifiable {
+    case oneWeek = "1W"
+    case oneMonth = "1M"
+    case threeMonths = "3M"
+    case all = "ALL"
+    
+    var id: String { self.rawValue }
+}
+
 struct ContentView: View {
     @Environment(\.openURL) var openURL
     @State private var locationSelection = Location.uk
     @ObservedObject private var viewModel = ViewModel()
+    @State private var casesChartCount = ChartCount.all
+    @State private var deathsChartCount = ChartCount.all
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
@@ -52,9 +64,21 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Cases")
                         .font(Font.title2.bold())
-                    Image("cases")
-                        .resizable()
-                        .scaledToFit()
+                    Chart(data: viewModel.casesData.suffix(casesDPCount()))
+                        .chartStyle(
+                            LineChartStyle(.quadCurve, lineColor: .orange, lineWidth: 2)
+                        )
+                        .padding()
+                        .frame(height: 250)
+                    Picker(selection: $casesChartCount, label:
+                            Text("")
+                    ) {
+                        ForEach(ChartCount.allCases) {
+                            Text($0.rawValue)
+                                .tag($0)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
                     VStack(alignment: .leading) {
                         Text(viewModel.latestCases)
                             .font(Font.title2.bold())
@@ -78,9 +102,21 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Deaths")
                         .font(Font.title2.bold())
-                    Image("deaths")
-                        .resizable()
-                        .scaledToFit()
+                    Chart(data: viewModel.deathsData.suffix(deathsDPCount()))
+                        .chartStyle(
+                            LineChartStyle(.quadCurve, lineColor: .red, lineWidth: 2)
+                        )
+                        .padding()
+                        .frame(height: 250)
+                    Picker(selection: $deathsChartCount, label:
+                            Text("")
+                    ) {
+                        ForEach(ChartCount.allCases) {
+                            Text($0.rawValue)
+                                .tag($0)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
                     VStack(alignment: .leading) {
                         Text(viewModel.latestDeaths)
                             .font(Font.title2.bold())
@@ -131,6 +167,32 @@ struct ContentView: View {
         }
         .onReceive(timer) { _ in
             updateIfNeeded()
+        }
+    }
+    
+    private func casesDPCount() -> Int {
+        switch casesChartCount {
+        case .all:
+            return viewModel.casesData.count
+        case .threeMonths:
+            return 90
+        case .oneMonth:
+            return 30
+        case .oneWeek:
+            return 7
+        }
+    }
+    
+    private func deathsDPCount() -> Int {
+        switch deathsChartCount {
+        case .all:
+            return viewModel.deathsData.count
+        case .threeMonths:
+            return 90
+        case .oneMonth:
+            return 30
+        case .oneWeek:
+            return 7
         }
     }
     

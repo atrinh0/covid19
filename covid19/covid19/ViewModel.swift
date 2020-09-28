@@ -32,8 +32,10 @@ class ViewModel: ObservableObject {
     @Published var latestDeaths = "-"
     @Published var totalDeaths = "-"
     @Published var deathsChange = ""
-    
     @Published var latestDate = "-"
+    
+    @Published var casesData: [Double] = []
+    @Published var deathsData: [Double] = []
     
     var url = "https://api.coronavirus.data.gov.uk/v1/data?filters=[FILTER]&structure=%7B%22date%22%3A%22date%22%2C%22cases%22%3A%22newCasesByPublishDate%22%2C%22cumCases%22%3A%22cumCasesByPublishDate%22%2C%22deaths%22%3A%22newDeaths28DaysByPublishDate%22%2C%22cumDeaths%22%3A%22cumDeaths28DaysByPublishDate%22%7D"
     var cancellable: Set<AnyCancellable> = Set()
@@ -164,6 +166,13 @@ class ViewModel: ObservableObject {
                 }
             }
         }
+        
+        let casesArray = data.map { Double($0.cases ?? 0) }
+        let deathsArray = data.map { Double($0.deaths ?? 0) }
+        let maxCases = casesArray.max() ?? 1.0
+        let maxDeaths = deathsArray.max() ?? 1.0
+        casesData = casesArray.map { $0/maxCases }.reversed()
+        deathsData = deathsArray.map { $0/maxDeaths }.reversed()
     }
     
     @objc func updateFooterText() {
