@@ -21,6 +21,7 @@
 		FC6DCF1D25224EA400D38990 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = FC6DCF1C25224EA400D38990 /* Charts */; };
 		FC6DCF22252269F900D38990 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF21252269F900D38990 /* Models.swift */; };
 		FC6DCF23252269F900D38990 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF21252269F900D38990 /* Models.swift */; };
+		FC6DCF2D2522816500D38990 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC6DCF2C2522816500D38990 /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		FC6DCF1025224E7500D38990 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC6DCF1225224E7500D38990 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC6DCF21252269F900D38990 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		FC6DCF2C2522816500D38990 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 				FC4100912520EE0900F931CC /* Assets.xcassets */,
 				FC4100962520EE0900F931CC /* Info.plist */,
 				FC4100932520EE0900F931CC /* Preview Content */,
+				FC6DCF2C2522816500D38990 /* Launch Screen.storyboard */,
 			);
 			path = covid19;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC6DCF2D2522816500D38990 /* Launch Screen.storyboard in Resources */,
 				FC4100952520EE0900F931CC /* Preview Assets.xcassets in Resources */,
 				FC4100922520EE0900F931CC /* Assets.xcassets in Resources */,
 			);
@@ -467,6 +471,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.atrinh.covid19.CasesWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -488,6 +493,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.atrinh.covid19.CasesWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
