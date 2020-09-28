@@ -67,7 +67,7 @@ struct ContentView: View {
             }
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Cases")
+                    Text("\(getFlag())Cases")
                         .font(Font.title2.bold())
                     Chart(data: viewModel.casesData.suffix(casesDPCount()))
                         .chartStyle(
@@ -105,7 +105,7 @@ struct ContentView: View {
             }
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Deaths")
+                    Text("\(getFlag())Deaths")
                         .font(Font.title2.bold())
                     Chart(data: viewModel.deathsData.suffix(deathsDPCount()))
                         .chartStyle(
@@ -175,6 +175,21 @@ struct ContentView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             reloadData()
+        }
+    }
+    
+    private func getFlag() -> String {
+        switch locationSelection {
+        case .uk:
+            return "🇬🇧 "
+        case .england:
+            return "🏴󠁧󠁢󠁥󠁮󠁧󠁿 "
+        case .northernIreland:
+            return "NIR "
+        case .scotland:
+            return "🏴󠁧󠁢󠁳󠁣󠁴󠁿 "
+        case .wales:
+            return "🏴󠁧󠁢󠁷󠁬󠁳󠁿 "
         }
     }
     
