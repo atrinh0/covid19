@@ -38,7 +38,7 @@ struct ContentView: View {
     
     var body: some View {
         List {
-            Section(footer: Text(viewModel.footerText)) {
+            Section {
                 HStack() {
                     Text(locationSelection.rawValue)
                         .lineLimit(0)
@@ -61,6 +61,10 @@ struct ContentView: View {
                 .padding([.vertical])
             }
             Section {
+                Text(viewModel.footerText)
+                    .padding([.vertical])
+            }
+            Section {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Cases")
                         .font(Font.title2.bold())
@@ -69,7 +73,7 @@ struct ContentView: View {
                             LineChartStyle(.quadCurve, lineColor: .orange, lineWidth: 2)
                         )
                         .padding()
-                        .frame(height: 250)
+                        .frame(height: 200)
                     Picker(selection: $casesChartCount, label:
                             Text("")
                     ) {
@@ -107,7 +111,7 @@ struct ContentView: View {
                             LineChartStyle(.quadCurve, lineColor: .red, lineWidth: 2)
                         )
                         .padding()
-                        .frame(height: 250)
+                        .frame(height: 200)
                     Picker(selection: $deathsChartCount, label:
                             Text("")
                     ) {

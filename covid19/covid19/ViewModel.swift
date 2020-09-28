@@ -24,7 +24,7 @@ class ViewModel: ObservableObject {
     @Published var data: [Info] = []
     @Published var lastUpdated: Date = Date.distantPast
     @Published var lastChecked: Date = Date.distantPast
-    @Published var footerText = "Loading...\n"
+    @Published var footerText = "Loading..."
     
     @Published var latestCases = "-"
     @Published var totalCases = "-"
@@ -181,10 +181,10 @@ class ViewModel: ObservableObject {
         let modified = dateFormatter.string(from: lastUpdated)
             .replacingOccurrences(of: " AM", with: "am")
             .replacingOccurrences(of: " PM", with: "pm")
-        let lastUpdatedString = "Last updated on \(modified)"
-        let lastCheckedString = isReloading ? "Reloading..." : "Last checked \(timeAgo(date: lastChecked))"
+        let lastUpdatedString = "Source last updated on \(modified)"
+        let lastCheckedString = isReloading ? "Checking..." : "Last checked \(timeAgo(date: lastChecked))"
         
-        footerText = isLoading ? "Loading...\n" : "\(lastUpdatedString)\n\(lastCheckedString)"
+        footerText = isLoading ? "Loading..." : "\(lastUpdatedString)\n\n\(lastCheckedString)"
     }
 }
 
