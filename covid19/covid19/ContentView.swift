@@ -22,6 +22,7 @@ enum ChartCount: String, CaseIterable, Identifiable {
     case oneWeek = "1W"
     case oneMonth = "1M"
     case threeMonths = "3M"
+    case sixMonths = "6M"
     case all = "ALL"
     
     var id: String { self.rawValue }
@@ -70,9 +71,8 @@ struct ContentView: View {
                         .font(Font.title2.bold())
                     Chart(data: viewModel.casesData.suffix(casesDPCount()))
                         .chartStyle(
-                            LineChartStyle(.quadCurve, lineColor: .orange, lineWidth: 2)
+                            LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
                         )
-                        .padding()
                         .frame(height: 200)
                     Picker(selection: $casesChartCount, label:
                             Text("")
@@ -83,6 +83,7 @@ struct ContentView: View {
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
+                    .padding(.bottom, 5)
                     VStack(alignment: .leading) {
                         Text(viewModel.latestCases)
                             .font(Font.title2.bold())
@@ -108,9 +109,8 @@ struct ContentView: View {
                         .font(Font.title2.bold())
                     Chart(data: viewModel.deathsData.suffix(deathsDPCount()))
                         .chartStyle(
-                            LineChartStyle(.quadCurve, lineColor: .red, lineWidth: 2)
+                            LineChartStyle(.line, lineColor: .red, lineWidth: 2)
                         )
-                        .padding()
                         .frame(height: 200)
                     Picker(selection: $deathsChartCount, label:
                             Text("")
@@ -121,6 +121,7 @@ struct ContentView: View {
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
+                    .padding(.bottom, 5)
                     VStack(alignment: .leading) {
                         Text(viewModel.latestDeaths)
                             .font(Font.title2.bold())
@@ -179,9 +180,11 @@ struct ContentView: View {
         case .all:
             return viewModel.casesData.count
         case .threeMonths:
-            return 90
+            return 91
+        case .sixMonths:
+            return 183
         case .oneMonth:
-            return 30
+            return 31
         case .oneWeek:
             return 7
         }
@@ -192,9 +195,11 @@ struct ContentView: View {
         case .all:
             return viewModel.deathsData.count
         case .threeMonths:
-            return 90
+            return 91
+        case .sixMonths:
+            return 183
         case .oneMonth:
-            return 30
+            return 31
         case .oneWeek:
             return 7
         }

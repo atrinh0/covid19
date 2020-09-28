@@ -169,8 +169,8 @@ class ViewModel: ObservableObject {
         
         let casesArray = data.map { Double($0.cases ?? 0) }
         let deathsArray = data.map { Double($0.deaths ?? 0) }
-        let maxCases = casesArray.max() ?? 1.0
-        let maxDeaths = deathsArray.max() ?? 1.0
+        let maxCases = (casesArray.max() ?? 1.0) * 1.05
+        let maxDeaths = (deathsArray.max() ?? 1.0) * 1.05
         casesData = casesArray.map { $0/maxCases }.reversed()
         deathsData = deathsArray.map { $0/maxDeaths }.reversed()
     }
@@ -181,7 +181,7 @@ class ViewModel: ObservableObject {
         let modified = dateFormatter.string(from: lastUpdated)
             .replacingOccurrences(of: " AM", with: "am")
             .replacingOccurrences(of: " PM", with: "pm")
-        let lastUpdatedString = "Source last updated on \(modified)"
+        let lastUpdatedString = "Source last updated on\n\(modified)"
         let lastCheckedString = isReloading ? "Checking..." : "Last checked \(timeAgo(date: lastChecked))"
         
         footerText = isLoading ? "Loading..." : "\(lastUpdatedString)\n\n\(lastCheckedString)"
