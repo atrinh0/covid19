@@ -46,5 +46,7 @@ For more information: [Ensuring the Credibility of Health & Safety Information](
 > I have decided to open the sourcecode for this app for the following reasons:
 > 
 > - Transparency in the hopes that it might be approved for the AppStore one day
-> - To share SwiftUI code with other iOS developers and improve this through contributions
+> - To share SwiftUI code with other iOS developers 
+> - To improve this app through contributions
 > - In the hopes that other iOS developers may use the app themselves
+> - To show how awesome SwiftUI is 🥳
