@@ -1,4 +1,4 @@
-<p align="center"><img src="images/Icon.png" width="200"></p>
+<p align="center"><img src="images/IconPrettified.png" width="200"></p>
 
 <p align="center">
     <img src="https://img.shields.io/badge/iOS-14.0+-blue.svg" />
