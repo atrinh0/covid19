@@ -10,7 +10,7 @@
 # 🇬🇧 UK COVID-19 Statistics
 This app was created with the intention of publishing to the AppStore. 
 
-The primary purpose of this app is to spread information with the UK public in the hopes that people will change their behavior to help us all control the spread of this virus.
+The primary purpose of this app is to share information with the UK public in the hopes that people will change their behavior to help us all control the spread of this virus.
 
 ### 🏙 Screenshots
 
