@@ -12,6 +12,11 @@ This app was created with the intention of publishing to the AppStore.
 
 The primary purpose of this app is to spread information with the UK public in the hopes that people will change their behavior to help us all control the spread of this virus.
 
+### 🏙 Screenshots
+
+<img src="images/countries.png" width="320"/> <img src="images/deaths.png" width="320"/>
+
+<img src="images/widgets.png" width="320"/> <img src="images/home.png" width="320"/>
 
 ### 😞 Rejection
 
