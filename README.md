@@ -40,7 +40,7 @@ For more information: [Ensuring the Credibility of Health & Safety Information](
 
 ### 🧐 Features
  
-- Widget showing latest daily cases 🧪 and deaths 🪦
+- Widget showing latest daily cases and deaths
 - 🔄 Automatically reload data every 15 minutes
 - 📈 Chart timescale can be changed (All data, 6 months, 3 months, 1 month, 1 week)
 - Change dataset for (🇬🇧 UK, 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England, Northern Ireland, 🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland, 🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales)
