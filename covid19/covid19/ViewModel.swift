@@ -54,7 +54,9 @@ class ViewModel: ObservableObject {
             self.updateFooterText()
         }
         
-        URLSession.shared.dataTaskPublisher(for: URL(string: urlForLocation(location: location))!)
+        let urlString = urlForLocation(location: location)
+        print("\(urlString)")
+        URLSession.shared.dataTaskPublisher(for: URL(string: urlString)!)
             .map { output in
                 if let urlReponse = output.response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields["Last-Modified"] as? String {
                     let dateFormatter = DateFormatter()

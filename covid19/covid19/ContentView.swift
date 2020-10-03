@@ -68,7 +68,7 @@ struct ContentView: View {
             }
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("\(getFlag())Cases")
+                    Text("\(getFlag()) Cases")
                         .font(Font.title2.bold())
                     Chart(data: viewModel.casesData.suffix(casesDPCount()))
                         .chartStyle(
@@ -106,7 +106,7 @@ struct ContentView: View {
             }
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("\(getFlag())Deaths")
+                    Text("\(getFlag()) Deaths")
                         .font(Font.title2.bold())
                     Chart(data: viewModel.deathsData.suffix(deathsDPCount()))
                         .chartStyle(
@@ -177,15 +177,15 @@ struct ContentView: View {
     private func getFlag() -> String {
         switch locationSelection {
         case .uk:
-            return "🇬🇧 "
+            return "🇬🇧"
         case .england:
-            return "🏴󠁧󠁢󠁥󠁮󠁧󠁿 "
+            return "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
         case .northernIreland:
-            return "NIR "
+            return "NIR"
         case .scotland:
-            return "🏴󠁧󠁢󠁳󠁣󠁴󠁿 "
+            return "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
         case .wales:
-            return "🏴󠁧󠁢󠁷󠁬󠁳󠁿 "
+            return "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
         }
     }
     
