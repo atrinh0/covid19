@@ -58,6 +58,7 @@ class ViewModel: ObservableObject {
         URLSession.shared.dataTaskPublisher(for: URL(string: urlString)!)
             .map { output in
                 if let urlReponse = output.response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields["Last-Modified"] as? String {
+                    UserDefaults.standard.setValue(lastModified, forKey: Constants.lastModifiedKey)
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
                     if let serverDate = dateFormatter.date(from: lastModified) {

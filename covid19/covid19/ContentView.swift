@@ -166,8 +166,7 @@ struct ContentView: View {
         
         // check every 15 minutes
         let interval = abs(viewModel.lastChecked.timeIntervalSinceNow)
-        let seconds = Int(interval)
-        if seconds >= 15*60 {
+        if interval >= Constants.updateInterval {
             viewModel.fetchData(locationSelection, clearData: false)
         }
     }

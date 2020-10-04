@@ -83,4 +83,8 @@ struct Constants {
     static let widgetName = "CasesWidget"
     
     static let aLongTimeAgo: TimeInterval = 60*60*24*120 // 120 days
+    static let updateInterval: TimeInterval = 60*15 // 15 min
+    
+    static let lastModifiedKey = "LastModified"
+    static let backgroundFetchId = "com.atrinh.covid.fetch"
 }
