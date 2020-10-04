@@ -15,7 +15,7 @@ struct Provider: TimelineProvider {
     }
     
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        URLSession.shared.dataTask(with: URL(string: "https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22date%22%3A%22date%22%2C%22cases%22%3A%22newCasesByPublishDate%22%2C%22cumCases%22%3A%22cumCasesByPublishDate%22%2C%22deaths%22%3A%22newDeaths28DaysByPublishDate%22%2C%22cumDeaths%22%3A%22cumDeaths28DaysByPublishDate%22%7D")!) { (data, _, _) in
+        URLSession.shared.dataTask(with: URL(string: Constants.url())!) { (data, _, _) in
             guard let data = data else { return }
             let response = try! JSONDecoder().decode(ResponseData.self, from: data)
             let entry = SimpleEntry(response: response)
@@ -24,7 +24,7 @@ struct Provider: TimelineProvider {
     }
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        URLSession.shared.dataTask(with: URL(string: "https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22date%22%3A%22date%22%2C%22cases%22%3A%22newCasesByPublishDate%22%2C%22cumCases%22%3A%22cumCasesByPublishDate%22%2C%22deaths%22%3A%22newDeaths28DaysByPublishDate%22%2C%22cumDeaths%22%3A%22cumDeaths28DaysByPublishDate%22%7D")!) { (data, _, _) in
+        URLSession.shared.dataTask(with: URL(string: Constants.url())!) { (data, _, _) in
             guard let data = data else { return }
             let response = try! JSONDecoder().decode(ResponseData.self, from: data)
             let entry = SimpleEntry(response: response)
@@ -155,7 +155,7 @@ struct WidgetView: View {
 
 @main
 struct CasesWidget: Widget {
-    let kind: String = "CasesWidget"
+    let kind: String = Constants.widgetName
     
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in

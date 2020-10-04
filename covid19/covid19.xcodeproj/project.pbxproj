@@ -22,6 +22,10 @@
 		FC6DCF22252269F900D38990 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF21252269F900D38990 /* Models.swift */; };
 		FC6DCF23252269F900D38990 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF21252269F900D38990 /* Models.swift */; };
 		FC6DCF2D2522816500D38990 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC6DCF2C2522816500D38990 /* Launch Screen.storyboard */; };
+		FCA371822529D2C700CD24C3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA371812529D2C700CD24C3 /* Extensions.swift */; };
+		FCA371832529D2C700CD24C3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA371812529D2C700CD24C3 /* Extensions.swift */; };
+		FCA371872529D34D00CD24C3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA371862529D34D00CD24C3 /* Constants.swift */; };
+		FCA371882529D34D00CD24C3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA371862529D34D00CD24C3 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +68,8 @@
 		FC6DCF1225224E7500D38990 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC6DCF21252269F900D38990 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		FC6DCF2C2522816500D38990 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		FCA371812529D2C700CD24C3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		FCA371862529D34D00CD24C3 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +159,8 @@
 			isa = PBXGroup;
 			children = (
 				FC6DCF21252269F900D38990 /* Models.swift */,
+				FCA371812529D2C700CD24C3 /* Extensions.swift */,
+				FCA371862529D34D00CD24C3 /* Constants.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -267,10 +275,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCA371822529D2C700CD24C3 /* Extensions.swift in Sources */,
 				FC4100902520EE0800F931CC /* ContentView.swift in Sources */,
 				FC41009F2521083B00F931CC /* ViewModel.swift in Sources */,
 				FC41008E2520EE0800F931CC /* covid19App.swift in Sources */,
 				FC6DCF22252269F900D38990 /* Models.swift in Sources */,
+				FCA371872529D34D00CD24C3 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,7 +289,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC6DCF0F25224E7200D38990 /* CasesWidget.swift in Sources */,
+				FCA371832529D2C700CD24C3 /* Extensions.swift in Sources */,
 				FC6DCF23252269F900D38990 /* Models.swift in Sources */,
+				FCA371882529D34D00CD24C3 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

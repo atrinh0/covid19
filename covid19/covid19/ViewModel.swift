@@ -26,7 +26,6 @@ class ViewModel: ObservableObject {
     @Published var casesData: [Double] = []
     @Published var deathsData: [Double] = []
     
-    var url = "https://api.coronavirus.data.gov.uk/v1/data?filters=[FILTER]&structure=%7B%22date%22%3A%22date%22%2C%22cases%22%3A%22newCasesByPublishDate%22%2C%22cumCases%22%3A%22cumCasesByPublishDate%22%2C%22deaths%22%3A%22newDeaths28DaysByPublishDate%22%2C%22cumDeaths%22%3A%22cumDeaths28DaysByPublishDate%22%7D"
     var cancellable: Set<AnyCancellable> = Set()
     var timer: Timer?
     
@@ -54,7 +53,7 @@ class ViewModel: ObservableObject {
             self.updateFooterText()
         }
         
-        let urlString = urlForLocation(location: location)
+        let urlString = Constants.url(location: location)
         print("\(urlString)")
         URLSession.shared.dataTaskPublisher(for: URL(string: urlString)!)
             .map { output in
@@ -88,32 +87,15 @@ class ViewModel: ObservableObject {
     }
     
     var isLoading: Bool {
-        abs(lastUpdated.timeIntervalSinceNow) > 60*60*24*120
+        abs(lastUpdated.timeIntervalSinceNow) > Constants.aLongTimeAgo
     }
     
     var isReloading: Bool {
-        abs(lastChecked.timeIntervalSinceNow) > 60*60*24*120
+        abs(lastChecked.timeIntervalSinceNow) > Constants.aLongTimeAgo
     }
     
     // MARK: - Helpers
-    
-    private func urlForLocation(location: Location) -> String {
-        var filter = "areaType=overview"
-        switch location {
-        case .uk:
-            filter = "areaType=overview"
-        case .england:
-            filter = "areaType=nation;areaName=england"
-        case .northernIreland:
-            filter = "areaType=nation;areaName=northern%20ireland"
-        case .scotland:
-            filter = "areaType=nation;areaName=scotland"
-        case .wales:
-            filter = "areaType=nation;areaName=wales"
-        }
-        return url.replacingOccurrences(of: "[FILTER]", with: filter)
-    }
-    
+
     private func timeAgo(date: Date) -> String {
         let interval = abs(date.timeIntervalSinceNow)
         

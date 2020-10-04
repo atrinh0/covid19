@@ -9,26 +9,6 @@ import SwiftUI
 import Charts
 import WidgetKit
 
-enum Location: String, CaseIterable, Identifiable {
-    case uk = "🇬🇧 United Kingdom"
-    case england = "🏴󠁧󠁢󠁥󠁮󠁧󠁿 England"
-    case northernIreland = "Northern Ireland"
-    case scotland = "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland"
-    case wales = "🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales"
-    
-    var id: String { self.rawValue }
-}
-
-enum ChartCount: String, CaseIterable, Identifiable {
-    case oneWeek = "1W"
-    case oneMonth = "1M"
-    case threeMonths = "3M"
-    case sixMonths = "6M"
-    case all = "ALL"
-    
-    var id: String { self.rawValue }
-}
-
 struct ContentView: View {
     @Environment(\.openURL) var openURL
     @State private var locationSelection = Location.uk
@@ -36,7 +16,7 @@ struct ContentView: View {
     @State private var casesChartCount = ChartCount.all
     @State private var deathsChartCount = ChartCount.all
     
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     
     var body: some View {
         List {
@@ -68,9 +48,9 @@ struct ContentView: View {
             }
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("\(getFlag()) Cases")
+                    Text("\(locationSelection.flag()) Cases")
                         .font(Font.title2.bold())
-                    Chart(data: viewModel.casesData.suffix(casesDPCount()))
+                    Chart(data: viewModel.casesData.suffix(casesChartCount.numberOfDatapoints()))
                         .chartStyle(
                             LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
                         )
@@ -106,9 +86,9 @@ struct ContentView: View {
             }
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("\(getFlag()) Deaths")
+                    Text("\(locationSelection.flag()) Deaths")
                         .font(Font.title2.bold())
-                    Chart(data: viewModel.deathsData.suffix(deathsDPCount()))
+                    Chart(data: viewModel.deathsData.suffix(deathsChartCount.numberOfDatapoints()))
                         .chartStyle(
                             LineChartStyle(.line, lineColor: .red, lineWidth: 2)
                         )
@@ -143,17 +123,17 @@ struct ContentView: View {
                 .padding(.vertical, 10)
             }
             Section {
-                Link(destination: URL(string: "https://apps.apple.com/gb/story/id1532087825")!) {
+                Link(destination: Constants.appStoreStory) {
                     Label("Get the Contact Tracing app", systemImage: "figure.stand.line.dotted.figure.stand")
                         .padding(.vertical)
                         .font(Font.body.bold())
                 }
-                Link(destination: URL(string: "https://www.gov.uk/guidance/the-r-number-in-the-uk")!) {
+                Link(destination: Constants.rNumberUK) {
                     Label("R-number and Growth Rate", systemImage: "number")
                         .padding(.vertical)
                         .font(Font.body.bold())
                 }
-                Link(destination: URL(string: "https://coronavirus.data.gov.uk")!) {
+                Link(destination: Constants.sourceGovUK) {
                     Label("Source: coronavirus.data.gov.uk", systemImage: "link")
                         .padding(.vertical)
                         .font(Font.body.bold())
@@ -163,59 +143,14 @@ struct ContentView: View {
         .listStyle(InsetGroupedListStyle())
         .onAppear {
             reloadData()
-            WidgetCenter.shared.reloadTimelines(ofKind: "CasesWidget")
+            WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
         }
         .onReceive(timer) { _ in
             updateIfNeeded()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             reloadData()
-            WidgetCenter.shared.reloadTimelines(ofKind: "CasesWidget")
-        }
-    }
-    
-    private func getFlag() -> String {
-        switch locationSelection {
-        case .uk:
-            return "🇬🇧"
-        case .england:
-            return "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
-        case .northernIreland:
-            return "NIR"
-        case .scotland:
-            return "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
-        case .wales:
-            return "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
-        }
-    }
-    
-    private func casesDPCount() -> Int {
-        switch casesChartCount {
-        case .all:
-            return viewModel.casesData.count
-        case .threeMonths:
-            return 91
-        case .sixMonths:
-            return 183
-        case .oneMonth:
-            return 31
-        case .oneWeek:
-            return 7
-        }
-    }
-    
-    private func deathsDPCount() -> Int {
-        switch deathsChartCount {
-        case .all:
-            return viewModel.deathsData.count
-        case .threeMonths:
-            return 91
-        case .sixMonths:
-            return 183
-        case .oneMonth:
-            return 31
-        case .oneWeek:
-            return 7
+            WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
         }
     }
     
@@ -232,7 +167,7 @@ struct ContentView: View {
         // check every 15 minutes
         let interval = abs(viewModel.lastChecked.timeIntervalSinceNow)
         let seconds = Int(interval)
-        if seconds > 15*60 {
+        if seconds >= 15*60 {
             viewModel.fetchData(locationSelection, clearData: false)
         }
     }
