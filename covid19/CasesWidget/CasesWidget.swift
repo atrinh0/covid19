@@ -90,7 +90,7 @@ struct WidgetView: View {
     let isTall: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: isTall ? 5 : 0) {
+        VStack(alignment: .leading, spacing: 5) {
             ZStack {
                 Chart(data: entry.casesData.suffix(isWide ? 183 : 91))
                     .chartStyle(
@@ -101,7 +101,7 @@ struct WidgetView: View {
                         LineChartStyle(.line, lineColor: .red, lineWidth: 2)
                     )
             }
-            .padding(.horizontal, -10)
+            .padding(.horizontal, -7)
             if isWide {
                 HStack(alignment: .bottom, spacing: isTall ? 5 : 0) {
                     HStack {
@@ -109,7 +109,7 @@ struct WidgetView: View {
                             .font(Font.title2.bold())
                             .foregroundColor(.orange) +
                             Text(" cases")
-                            .font(.caption)
+                            .font(Font.caption.bold())
                         Spacer()
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -118,7 +118,7 @@ struct WidgetView: View {
                             .font(Font.title2.bold())
                             .foregroundColor(.red) +
                             Text(" deaths")
-                            .font(.caption)
+                            .font(Font.caption.bold())
                         Spacer()
                     }
                     .frame(minWidth: 0, maxWidth: .infinity)
@@ -130,19 +130,20 @@ struct WidgetView: View {
                             .font(Font.title2.bold())
                             .foregroundColor(.orange) +
                             Text(" cases")
-                            .font(.caption)
+                            .font(Font.caption.bold())
                     }
                     HStack {
                         Text(formatCount(val: entry.deaths))
                             .font(Font.title2.bold())
                             .foregroundColor(.red) +
                             Text(" deaths")
-                            .font(.caption)
+                            .font(Font.caption.bold())
                     }
                 }
             }
         }
         .padding(10)
+        .background(LinearGradient(gradient: Gradient(colors: [Color(UIColor.systemBackground), Color.clear]), startPoint: .top, endPoint: .bottom))
     }
     
     private func formatCount(val: Int?) -> String {
