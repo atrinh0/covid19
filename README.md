@@ -18,9 +18,17 @@ The primary purpose of this app is to share information with the UK public in th
 
 ### 🏙 Screenshots
 
+#### App
+
 <img src="images/countries.png" width="320"/> <img src="images/deaths.png" width="320"/>
 
+#### Widget
+
 <img src="images/widgets.png" width="320"/> <img src="images/home.png" width="320"/>
+
+#### Background Fetch Notification
+
+<img src="images/notification.png" width="320"/>
 
 ### 😞 Rejection
 
@@ -41,7 +49,8 @@ For more information: [Ensuring the Credibility of Health & Safety Information](
 ### 🧐 Features
  
 - Widget showing latest daily cases and deaths
-- 🔄 Automatically reload data every 15 minutes
+- 🔄 Automatically reload data every 15 minutes (from within the app, and widget data)
+- 🔔 Fetch data every 15 minutes in the background and send a local notification upon detecting any changes
 - 📈 Chart timescale can be changed (All data, 6 months, 3 months, 1 month, 1 week)
 - Change dataset for (🇬🇧 UK, 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England, Northern Ireland, 🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland, 🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales)
 
