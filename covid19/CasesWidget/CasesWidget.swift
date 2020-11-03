@@ -15,19 +15,19 @@ struct Provider: TimelineProvider {
     }
     
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        URLSession.shared.dataTask(with: URL(string: Constants.url())!) { (data, _, _) in
+        URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
             guard let data = data else { return }
-            let response = try! JSONDecoder().decode(ResponseData.self, from: data)
-            let entry = SimpleEntry(response: response)
+            let responseData = try! JSONDecoder().decode(ResponseData.self, from: data)
+            let entry = SimpleEntry(responseData: responseData, response: response)
             completion(entry)
         }.resume()
     }
     
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
-        URLSession.shared.dataTask(with: URL(string: Constants.url())!) { (data, _, _) in
+        URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
             guard let data = data else { return }
-            let response = try! JSONDecoder().decode(ResponseData.self, from: data)
-            let entry = SimpleEntry(response: response)
+            let responseData = try! JSONDecoder().decode(ResponseData.self, from: data)
+            let entry = SimpleEntry(responseData: responseData, response: response)
             completion(Timeline(entries: [entry], policy: .after(Calendar.current.date(byAdding: .minute, value: 15, to: Date())!)))
         }.resume()
     }
@@ -39,6 +39,7 @@ struct SimpleEntry: TimelineEntry {
     let deaths: Int?
     let casesData: [Double]
     let deathsData: [Double]
+    let lastUpdated: String
     
     init(date: Date, cases: Int, deaths: Int, casesData: [Double], deathsData: [Double]) {
         self.date = date
@@ -46,11 +47,12 @@ struct SimpleEntry: TimelineEntry {
         self.deaths = deaths
         self.casesData = casesData
         self.deathsData = deathsData
+        self.lastUpdated = ""
     }
     
-    init(date: Date? = Date(), response: ResponseData) {
+    init(date: Date? = Date(), responseData: ResponseData, response: URLResponse?) {
         self.date = date ?? Date()
-        if let firstRecord = response.data.first, let cases = firstRecord.cases, let deaths = firstRecord.deaths {
+        if let firstRecord = responseData.data.first, let cases = firstRecord.cases, let deaths = firstRecord.deaths {
             self.cases = cases
             self.deaths = deaths
         } else {
@@ -58,13 +60,19 @@ struct SimpleEntry: TimelineEntry {
             self.deaths = 0
         }
         
-        let casesArray = response.data.map { Double($0.cases ?? 0) }
-        let deathsArray = response.data.map { Double($0.deaths ?? 0) }
+        let casesArray = responseData.data.map { Double($0.cases ?? 0) }
+        let deathsArray = responseData.data.map { Double($0.deaths ?? 0) }
         let maxCases = (casesArray.max() ?? 1.0) * 1.05
         let maxDeaths = (deathsArray.max() ?? 1.0) * 1.05
         let commonMax = max(maxCases, maxDeaths)
         self.casesData = casesArray.map { $0/commonMax }.reversed()
         self.deathsData = deathsArray.map { $0/commonMax }.reversed()
+        
+        if let response = response, let urlReponse = response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields["Last-Modified"] as? String {
+            lastUpdated = lastModified
+        } else {
+            lastUpdated = ""
+        }
     }
 }
 
@@ -91,7 +99,12 @@ struct WidgetView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            ZStack {
+            ZStack(alignment: .topLeading) {
+                Text(lastUpdated(val: entry.lastUpdated))
+                    .font(Font.title2.bold())
+                    .foregroundColor(.primary)
+                    .opacity(0.2)
+                    .padding(.horizontal, 7)
                 Chart(data: entry.casesData.suffix(isWide ? 183 : 91))
                     .chartStyle(
                         LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
@@ -151,6 +164,29 @@ struct WidgetView: View {
             return "+\(val.formattedWithSeparator)"
         }
         return " "
+    }
+    
+    private func lastUpdated(val: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
+        if let serverDate = dateFormatter.date(from: val) {
+            return timeAgo(date: serverDate)
+        }
+        return ""
+    }
+    
+    private func timeAgo(date: Date) -> String {
+        let interval = abs(date.timeIntervalSinceNow)
+        
+        if interval < 60 {
+            return "just now"
+        }
+        if interval < 60*60 {
+            let minutes = Int(interval/60)
+            return "\(minutes) mins ago"
+        }
+        let hours = Int(interval/(60*60))
+        return "\(hours) hrs ago"
     }
 }
 
