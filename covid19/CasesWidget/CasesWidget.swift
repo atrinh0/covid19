@@ -101,7 +101,7 @@ struct WidgetView: View {
         VStack(alignment: .leading, spacing: 5) {
             ZStack(alignment: .topLeading) {
                 Text(lastUpdated(val: entry.lastUpdated))
-                    .font(Font.title2.bold())
+                    .font(Font.title3.bold())
                     .foregroundColor(.primary)
                     .opacity(0.2)
                     .padding(.horizontal, 7)
@@ -178,15 +178,20 @@ struct WidgetView: View {
     private func timeAgo(date: Date) -> String {
         let interval = abs(date.timeIntervalSinceNow)
         
-        if interval < 60 {
+        if interval < 60*15 {
             return "just now"
         }
-        if interval < 60*60 {
-            let minutes = Int(interval/60)
+        let minutes = Int(interval/60)
+        if interval < 60*90 {
             return "\(minutes) mins ago"
         }
-        let hours = Int(interval/(60*60))
-        return "\(hours) hrs ago"
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 1
+        if let hours = formatter.string(for: Double(minutes)/60) {
+            return "\(hours) hrs ago"
+        }
+        return ""
     }
 }
 
