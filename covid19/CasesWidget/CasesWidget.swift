@@ -62,11 +62,10 @@ struct SimpleEntry: TimelineEntry {
         
         let casesArray = responseData.data.map { Double($0.cases ?? 0) }
         let deathsArray = responseData.data.map { Double($0.deaths ?? 0) }
-        let maxCases = (casesArray.max() ?? 1.0) * 1.05
-        let maxDeaths = (deathsArray.max() ?? 1.0) * 1.05
-        let commonMax = max(maxCases, maxDeaths)
-        self.casesData = casesArray.map { $0/commonMax }.reversed()
-        self.deathsData = deathsArray.map { $0/commonMax }.reversed()
+        let maxCasesScalingValue = (casesArray.max() ?? 1.0) * 1.05
+        let maxDeathsScalingValue = (deathsArray.max() ?? 1.0) * 1.05 * 2
+        self.casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
+        self.deathsData = deathsArray.map { $0/maxDeathsScalingValue }.reversed()
         
         if let response = response, let urlReponse = response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields["Last-Modified"] as? String {
             lastUpdated = lastModified
