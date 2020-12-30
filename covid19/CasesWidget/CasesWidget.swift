@@ -104,13 +104,13 @@ struct WidgetView: View {
                     .foregroundColor(.primary)
                     .opacity(0.2)
                     .padding(.horizontal, 7)
-                Chart(data: entry.casesData.suffix(isWide ? 183 : 91))
-                    .chartStyle(
-                        LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
-                    )
                 Chart(data: entry.deathsData.suffix(isWide ? 183 : 91))
                     .chartStyle(
                         LineChartStyle(.line, lineColor: .red, lineWidth: 2)
+                    )
+                Chart(data: entry.casesData.suffix(isWide ? 183 : 91))
+                    .chartStyle(
+                        LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
                     )
             }
             .padding(.horizontal, -7)
