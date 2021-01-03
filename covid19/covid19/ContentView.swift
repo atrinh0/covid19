@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var deathsChartCount = ChartCount.all
     
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    private let chartHeight: CGFloat = 175
     
     var body: some View {
         List {
@@ -54,7 +55,7 @@ struct ContentView: View {
                         .chartStyle(
                             LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
                         )
-                        .frame(height: 200)
+                        .frame(height: chartHeight)
                     Picker(selection: $casesChartCount, label:
                             Text("")
                     ) {
@@ -66,19 +67,29 @@ struct ContentView: View {
                     .pickerStyle(SegmentedPickerStyle())
                     .padding(.bottom, 5)
                     VStack(alignment: .leading) {
-                        Text(viewModel.latestCases)
+                        Text(viewModel.dailyLatestCases)
                             .font(Font.title2.bold())
                             .foregroundColor(.orange) +
-                            Text(viewModel.casesChange)
+                            Text(viewModel.dailyCasesChange)
                             .font(Font.title2.bold())
                             .foregroundColor(.gray)
                         Text("new cases on \(viewModel.latestDate)")
                             .foregroundColor(.gray)
                     }
                     VStack(alignment: .leading) {
+                        Text(viewModel.weeklyLatestCases)
+                            .font(Font.title2.bold())
+                            .foregroundColor(.orange) +
+                            Text(viewModel.weeklyCasesChange)
+                            .font(Font.title2.bold())
+                            .foregroundColor(.gray)
+                        Text("new cases in the last 7 days")
+                            .foregroundColor(.gray)
+                    }
+                    VStack(alignment: .leading) {
                         Text(viewModel.totalCases)
                             .font(Font.title2.bold()) +
-                        Text(" total")
+                            Text(" total")
                             .foregroundColor(.gray)
                     }
                 }
@@ -86,13 +97,17 @@ struct ContentView: View {
             }
             Section {
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("\(locationSelection.flag()) Deaths")
-                        .font(Font.title2.bold())
+                    VStack(alignment: .leading) {
+                        Text("\(locationSelection.flag()) Deaths")
+                            .font(Font.title2.bold())
+                        Text("within 28 days of positive test")
+                            .foregroundColor(.gray)
+                    }
                     Chart(data: viewModel.deathsData.suffix(deathsChartCount.numberOfDatapoints()))
                         .chartStyle(
                             LineChartStyle(.line, lineColor: .red, lineWidth: 2)
                         )
-                        .frame(height: 200)
+                        .frame(height: chartHeight)
                     Picker(selection: $deathsChartCount, label:
                             Text("")
                     ) {
@@ -104,19 +119,29 @@ struct ContentView: View {
                     .pickerStyle(SegmentedPickerStyle())
                     .padding(.bottom, 5)
                     VStack(alignment: .leading) {
-                        Text(viewModel.latestDeaths)
+                        Text(viewModel.dailyLatestDeaths)
                             .font(Font.title2.bold())
                             .foregroundColor(.red) +
-                            Text(viewModel.deathsChange)
+                            Text(viewModel.dailyDeathsChange)
                             .font(Font.title2.bold())
                             .foregroundColor(.gray)
                         Text("new deaths on \(viewModel.latestDate)")
                             .foregroundColor(.gray)
                     }
                     VStack(alignment: .leading) {
+                        Text(viewModel.weeklyLatestDeaths)
+                            .font(Font.title2.bold())
+                            .foregroundColor(.red) +
+                            Text(viewModel.weeklyDeathsChange)
+                            .font(Font.title2.bold())
+                            .foregroundColor(.gray)
+                        Text("new deaths in the last 7 days")
+                            .foregroundColor(.gray)
+                    }
+                    VStack(alignment: .leading) {
                         Text(viewModel.totalDeaths)
                             .font(Font.title2.bold()) +
-                        Text(" total")
+                            Text(" total")
                             .foregroundColor(.gray)
                     }
                 }

@@ -15,12 +15,16 @@ class ViewModel: ObservableObject {
     @Published var footerText = "Loading..."
     private var error: String? = nil
     
-    @Published var latestCases = "-"
+    @Published var dailyLatestCases = "-"
+    @Published var dailyCasesChange = ""
+    @Published var weeklyLatestCases = "-"
+    @Published var weeklyCasesChange = ""
     @Published var totalCases = "-"
-    @Published var casesChange = ""
-    @Published var latestDeaths = "-"
+    @Published var dailyLatestDeaths = "-"
+    @Published var dailyDeathsChange = ""
+    @Published var weeklyLatestDeaths = "-"
+    @Published var weeklyDeathsChange = ""
     @Published var totalDeaths = "-"
-    @Published var deathsChange = ""
     @Published var latestDate = "-"
     
     @Published var casesData: [Double] = []
@@ -41,12 +45,16 @@ class ViewModel: ObservableObject {
             if clearData {
                 self.data = []
                 self.lastUpdated = .distantPast
-                self.latestCases = "-"
+                self.dailyLatestCases = "-"
+                self.dailyCasesChange = ""
+                self.weeklyLatestCases = "-"
+                self.weeklyCasesChange = ""
                 self.totalCases = "-"
-                self.casesChange = ""
-                self.latestDeaths = "-"
+                self.dailyLatestDeaths = "-"
+                self.dailyDeathsChange = ""
+                self.weeklyLatestDeaths = "-"
+                self.weeklyDeathsChange = ""
                 self.totalDeaths = "-"
-                self.deathsChange = ""
                 self.latestDate = "-"
             }
 
@@ -112,14 +120,14 @@ class ViewModel: ObservableObject {
         updateFooterText()
         if let latestRecord = data.first {
             if let cases = latestRecord.cases, cases > 0 {
-                latestCases = "+\(cases.formattedWithSeparator)"
+                dailyLatestCases = "+\(cases.formattedWithSeparator)"
             } else {
-                latestCases = "0"
+                dailyLatestCases = "0"
             }
             if let deaths = latestRecord.deaths, deaths > 0 {
-                latestDeaths = "+\(deaths.formattedWithSeparator)"
+                dailyLatestDeaths = "+\(deaths.formattedWithSeparator)"
             } else {
-                latestDeaths = "0"
+                dailyLatestDeaths = "0"
             }
             totalCases = latestRecord.cumCases?.formattedWithSeparator ?? "0"
             totalDeaths = latestRecord.cumDeaths?.formattedWithSeparator ?? "0"
@@ -136,14 +144,36 @@ class ViewModel: ObservableObject {
                 if let cases = latestRecord.cases, let dayBeforeCases = secondRecord.cases {
                     let difference = cases - dayBeforeCases
                     let minusOrPlus = difference < 0 ? "-" : "+"
-                    casesChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
+                    dailyCasesChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
                 }
                 if let deaths = latestRecord.deaths, let dayBeforeDeaths = secondRecord.deaths {
                     let difference = deaths - dayBeforeDeaths
                     let minusOrPlus = difference < 0 ? "-" : "+"
-                    deathsChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
+                    dailyDeathsChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
                 }
             }
+        }
+        
+        if data.count > 14 {
+            let fortnightCases = data.prefix(14).compactMap({ $0.cases }).reduce(0, { x, y in x + y })
+            let weeklyCases = data.prefix(7).compactMap({ $0.cases }).reduce(0, { x, y in x + y })
+            let fortnightDeaths = data.prefix(14).compactMap({ $0.deaths }).reduce(0, { x, y in x + y })
+            let weeklyDeaths = data.prefix(7).compactMap({ $0.deaths }).reduce(0, { x, y in x + y })
+            
+            let priorWeekCases = fortnightCases - weeklyCases
+            let casesDifference = weeklyCases - priorWeekCases
+            let casesMinusOrPlus = casesDifference < 0 ? "-" : "+"
+            let casesPercentageChange: Double = Double(abs(casesDifference))/Double(priorWeekCases) * 100
+            
+            let priorWeekDeaths = fortnightDeaths - weeklyDeaths
+            let deathsDifference = weeklyDeaths - priorWeekDeaths
+            let deathsMinusOrPlus = deathsDifference < 0 ? "-" : "+"
+            let deathsPercentageChange: Double = Double(abs(deathsDifference))/Double(priorWeekDeaths) * 100
+            
+            weeklyLatestCases = "+\(weeklyCases.formattedWithSeparator)"
+            weeklyCasesChange = " (\(casesMinusOrPlus)\(abs(casesDifference).formattedWithSeparator), \(casesPercentageChange.rounded(toPlaces: 1))%)"
+            weeklyLatestDeaths = "+\(weeklyDeaths.formattedWithSeparator)"
+            weeklyDeathsChange = " (\(deathsMinusOrPlus)\(abs(deathsDifference).formattedWithSeparator), \(deathsPercentageChange.rounded(toPlaces: 1))%)"
         }
         
         let casesArray = data.map { Double($0.cases ?? 0) }
