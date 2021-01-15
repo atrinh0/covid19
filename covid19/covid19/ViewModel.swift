@@ -171,9 +171,9 @@ class ViewModel: ObservableObject {
             let deathsPercentageChange: Double = Double(abs(deathsDifference))/Double(priorWeekDeaths) * 100
             
             weeklyLatestCases = "+\(weeklyCases.formattedWithSeparator)"
-            weeklyCasesChange = " (\(casesMinusOrPlus)\(abs(casesDifference).formattedWithSeparator), \(casesPercentageChange.rounded(toPlaces: 1))%)"
+            weeklyCasesChange = " (\(casesMinusOrPlus)\(abs(casesDifference).formattedWithSeparator), \(casesMinusOrPlus)\(casesPercentageChange.rounded(toPlaces: 1))%)"
             weeklyLatestDeaths = "+\(weeklyDeaths.formattedWithSeparator)"
-            weeklyDeathsChange = " (\(deathsMinusOrPlus)\(abs(deathsDifference).formattedWithSeparator), \(deathsPercentageChange.rounded(toPlaces: 1))%)"
+            weeklyDeathsChange = " (\(deathsMinusOrPlus)\(abs(deathsDifference).formattedWithSeparator), \(casesMinusOrPlus)\(deathsPercentageChange.rounded(toPlaces: 1))%)"
         }
         
         let casesArray = data.map { Double($0.cases ?? 0) }
