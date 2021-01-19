@@ -6,9 +6,9 @@
     <img src="https://img.shields.io/badge/Swift-5.3-orange.svg" />
     <img src="https://img.shields.io/badge/SwiftUI-2.0-red.svg" />
 </p>
- 
+
 # 🇬🇧 UK COVID-19 Statistics
-This app was created with the intention of publishing to the AppStore. 
+This app was created with the intention of publishing to the AppStore.
 
 The primary purpose of this app is to share information with the UK public in the hopes that people will change their behavior to help us all control the spread of this virus.
 
@@ -47,19 +47,19 @@ For more information: [Ensuring the Credibility of Health & Safety Information](
 [https://coronavirus.data.gov.uk/developers-guide](https://coronavirus.data.gov.uk/developers-guide)
 
 ### 🧐 Features
- 
+
 - Widget showing latest daily cases and deaths
 - 🔄 Automatically reload data every 15 minutes (from within the app, and widget data)
-- 🔔 Fetch data every 15 minutes in the background and send a local notification upon detecting any changes
+- 🔔 Fetch data every 15 minutes in the background (subject to iOS system rules for scheduling background tasks) and send a local notification upon detecting any changes
 - 📈 Chart timescale can be changed (All data, 6 months, 3 months, 1 month, 1 week)
 - Change dataset for (🇬🇧 UK, 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England, Northern Ireland, 🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland, 🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales)
 
 ### 👨🏻‍⚖️ Disclaimer
 
 > I have decided to open the sourcecode for this app for the following reasons:
-> 
+>
 > - Transparency in the hopes that it might be approved for the AppStore one day
-> - To share SwiftUI code with other iOS developers 
+> - To share SwiftUI code with other iOS developers
 > - To improve this app through contributions
 > - In the hopes that other iOS developers may use the app themselves
 > - To show how awesome SwiftUI is 🥳
