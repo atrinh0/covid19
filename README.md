@@ -20,11 +20,11 @@ The primary purpose of this app is to share information with the UK public in th
 
 #### App
 
-<img src="images/countries.png" width="320"/> <img src="images/deaths.png" width="320"/>
+<img src="images/countries1.png" width="320"/> <img src="images/deaths1.png" width="320"/>
 
 #### Widget
 
-<img src="images/widgets.png" width="320"/> <img src="images/home.png" width="320"/>
+<img src="images/widgets1.png" width="320"/> <img src="images/home1.png" width="320"/>
 
 #### Background Fetch Notification
 
