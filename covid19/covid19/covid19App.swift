@@ -128,16 +128,29 @@ struct covid19App: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
-                    let fetchTask = BGAppRefreshTaskRequest(identifier: Constants.backgroundFetchId)
-                    fetchTask.earliestBeginDate = Date(timeIntervalSinceNow: Constants.updateInterval)
-                    do {
-                        try BGTaskScheduler.shared.submit(fetchTask)
-                    } catch {
-                        print("Unable to submit task: \(error.localizedDescription)")
+            TabView {
+                ContentView()
+                    .tabItem {
+                        Label("Graphs", systemImage: "chart.bar.xaxis")
                     }
+                RNumberView()
+                    .tabItem {
+                        Label("R value", systemImage: "r.circle.fill")
+                    }
+                SourceView()
+                    .tabItem {
+                        Label("Gov.uk", systemImage: "cloud.fill")
+                    }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in
+                let fetchTask = BGAppRefreshTaskRequest(identifier: Constants.backgroundFetchId)
+                fetchTask.earliestBeginDate = Date(timeIntervalSinceNow: Constants.updateInterval)
+                do {
+                    try BGTaskScheduler.shared.submit(fetchTask)
+                } catch {
+                    print("Unable to submit task: \(error.localizedDescription)")
                 }
+            }
         }
     }
 }

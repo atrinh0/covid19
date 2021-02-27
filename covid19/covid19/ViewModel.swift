@@ -28,7 +28,8 @@ class ViewModel: ObservableObject {
     @Published var latestDate = "-"
     
     @Published var casesData: [Double] = []
-    @Published var deathsData: [Double] = []
+    @Published var rawDeathsData: [Double] = []
+    @Published var relativeDeathsData: [Double] = []
     
     var cancellable: Set<AnyCancellable> = Set()
     var timer: Timer?
@@ -178,10 +179,11 @@ class ViewModel: ObservableObject {
         
         let casesArray = data.map { Double($0.cases ?? 0) }
         let deathsArray = data.map { Double($0.deaths ?? 0) }
-        let maxCases = (casesArray.max() ?? 1.0) * 1.05
-        let maxDeaths = (deathsArray.max() ?? 1.0) * 1.05
-        casesData = casesArray.map { $0/maxCases }.reversed()
-        deathsData = deathsArray.map { $0/maxDeaths }.reversed()
+        let maxCasesScalingValue = (casesArray.max() ?? 1.0) * 1.05
+        let maxDeathsScalingValue = (deathsArray.max() ?? 1.0) * 1.05
+        casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
+        rawDeathsData = deathsArray.map { $0/maxDeathsScalingValue }.reversed()
+        relativeDeathsData = deathsArray.map { $0/maxCasesScalingValue }.reversed()
     }
     
     @objc func updateFooterText() {

@@ -26,6 +26,9 @@
 		FCA371832529D2C700CD24C3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA371812529D2C700CD24C3 /* Extensions.swift */; };
 		FCA371872529D34D00CD24C3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA371862529D34D00CD24C3 /* Constants.swift */; };
 		FCA371882529D34D00CD24C3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA371862529D34D00CD24C3 /* Constants.swift */; };
+		FCCACA6525EAC4D100C3E0FF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCACA6425EAC4D100C3E0FF /* WebView.swift */; };
+		FCCACA6A25EAC52100C3E0FF /* RNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCACA6925EAC52100C3E0FF /* RNumberView.swift */; };
+		FCCACA7625EACADA00C3E0FF /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCACA7525EACADA00C3E0FF /* SourceView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +73,9 @@
 		FC6DCF2C2522816500D38990 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		FCA371812529D2C700CD24C3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		FCA371862529D34D00CD24C3 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		FCCACA6425EAC4D100C3E0FF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		FCCACA6925EAC52100C3E0FF /* RNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNumberView.swift; sourceTree = "<group>"; };
+		FCCACA7525EACADA00C3E0FF /* SourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,9 +123,12 @@
 		FC41008C2520EE0800F931CC /* covid19 */ = {
 			isa = PBXGroup;
 			children = (
+				FCCACA6825EAC50C00C3E0FF /* Views */,
 				FC41008D2520EE0800F931CC /* covid19App.swift */,
-				FC41008F2520EE0800F931CC /* ContentView.swift */,
 				FC41009E2521083B00F931CC /* ViewModel.swift */,
+				FC41008F2520EE0800F931CC /* ContentView.swift */,
+				FCCACA6925EAC52100C3E0FF /* RNumberView.swift */,
+				FCCACA7525EACADA00C3E0FF /* SourceView.swift */,
 				FC4100912520EE0900F931CC /* Assets.xcassets */,
 				FC4100962520EE0900F931CC /* Info.plist */,
 				FC4100932520EE0900F931CC /* Preview Content */,
@@ -163,6 +172,14 @@
 				FCA371862529D34D00CD24C3 /* Constants.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		FCCACA6825EAC50C00C3E0FF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				FCCACA6425EAC4D100C3E0FF /* WebView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -277,10 +294,13 @@
 			files = (
 				FCA371822529D2C700CD24C3 /* Extensions.swift in Sources */,
 				FC4100902520EE0800F931CC /* ContentView.swift in Sources */,
+				FCCACA6A25EAC52100C3E0FF /* RNumberView.swift in Sources */,
+				FCCACA7625EACADA00C3E0FF /* SourceView.swift in Sources */,
 				FC41009F2521083B00F931CC /* ViewModel.swift in Sources */,
 				FC41008E2520EE0800F931CC /* covid19App.swift in Sources */,
 				FC6DCF22252269F900D38990 /* Models.swift in Sources */,
 				FCA371872529D34D00CD24C3 /* Constants.swift in Sources */,
+				FCCACA6525EAC4D100C3E0FF /* WebView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +499,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6DRH5697SN;
 				INFOPLIST_FILE = CasesWidget/Info.plist;
@@ -490,6 +511,7 @@
 				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.atrinh.covid.CasesWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -501,6 +523,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6DRH5697SN;
 				INFOPLIST_FILE = CasesWidget/Info.plist;
@@ -512,6 +535,7 @@
 				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.atrinh.covid.CasesWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -14,158 +14,131 @@ struct ContentView: View {
     @State private var locationSelection = Location.uk
     @ObservedObject private var viewModel = ViewModel()
     @State private var casesChartCount = ChartCount.all
-    @State private var deathsChartCount = ChartCount.all
+    @State private var showRelativeChartData = false
     
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
-    private let chartHeight: CGFloat = 175
+    private let chartHeight: CGFloat = 200
     
     var body: some View {
-        List {
-            Section {
-                HStack() {
-                    Text(locationSelection.rawValue)
-                        .lineLimit(0)
-                        .font(Font.title2.bold())
-                    Spacer()
-                    Picker(selection: $locationSelection, label:
-                            Image(systemName: "chevron.down.circle.fill")
+            List {
+                Section {
+                    HStack() {
+                        Text(locationSelection.rawValue)
+                            .lineLimit(0)
                             .font(Font.title2.bold())
-                    ) {
-                        ForEach(Location.allCases) {
-                            Text($0.rawValue)
-                                .tag($0)
+                        Spacer()
+                        Picker(selection: $locationSelection, label:
+                                Image(systemName: "chevron.down.circle.fill")
+                                .font(Font.title2.bold())
+                        ) {
+                            ForEach(Location.allCases) {
+                                Text($0.rawValue)
+                                    .tag($0)
+                            }
                         }
+                        .onChange(of: locationSelection) { _ in
+                            reloadData()
+                        }
+                        .pickerStyle(MenuPickerStyle())
                     }
-                    .onChange(of: locationSelection) { _ in
-                        reloadData()
-                    }
-                    .pickerStyle(MenuPickerStyle())
-                }
-                .padding([.vertical])
-            }
-            Section {
-                Text(viewModel.footerText)
                     .padding([.vertical])
-            }
-            Section {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("\(locationSelection.flag()) Cases")
-                        .font(Font.title2.bold())
-                    Chart(data: viewModel.casesData.suffix(casesChartCount.numberOfDatapoints()))
-                        .chartStyle(
-                            LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
-                        )
-                        .frame(height: chartHeight)
-                    Picker(selection: $casesChartCount, label:
-                            Text("")
-                    ) {
-                        ForEach(ChartCount.allCases) {
-                            Text($0.rawValue)
-                                .tag($0)
+                }
+                Section {
+                    Text(viewModel.footerText)
+                        .padding([.vertical])
+                }
+                Section {
+                    VStack(alignment: .leading, spacing: 10) {
+                        ZStack {
+                            Chart(data: viewModel.casesData.suffix(casesChartCount.numberOfDatapoints()))
+                                .chartStyle(
+                                    LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
+                                )
+                                .frame(height: chartHeight)
+                            Chart(data: deathsData)
+                                .chartStyle(
+                                    LineChartStyle(.line, lineColor: .red, lineWidth: 2)
+                                )
+                                .frame(height: chartHeight)
+                        }
+                        Picker(selection: $casesChartCount, label:
+                                Text("")
+                        ) {
+                            ForEach(ChartCount.allCases) {
+                                Text($0.rawValue)
+                                    .tag($0)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        Picker(selection: $showRelativeChartData, label:
+                                Text("")
+                        ) {
+                            Text("Relative")
+                                .tag(true)
+                            Text("Emphasised")
+                                .tag(false)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding(.bottom, 5)
+                        VStack(alignment: .leading) {
+                            Text(viewModel.dailyLatestCases)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.orange) +
+                                Text(viewModel.dailyCasesChange)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.gray)
+                            Text("new cases on \(viewModel.latestDate)")
+                                .foregroundColor(.gray)
+                        }
+                        VStack(alignment: .leading) {
+                            Text(viewModel.weeklyLatestCases)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.orange) +
+                                Text(viewModel.weeklyCasesChange)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.gray)
+                            Text("new cases in the last 7 days")
+                                .foregroundColor(.gray)
+                        }
+                        VStack(alignment: .leading) {
+                            Text(viewModel.totalCases)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.orange) +
+                                Text(" total cases")
+                                .foregroundColor(.gray)
+                        }
+                        VStack(alignment: .leading) {
+                            Text(viewModel.dailyLatestDeaths)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.red) +
+                                Text(viewModel.dailyDeathsChange)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.gray)
+                            Text("new deaths on \(viewModel.latestDate)")
+                                .foregroundColor(.gray)
+                        }
+                        VStack(alignment: .leading) {
+                            Text(viewModel.weeklyLatestDeaths)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.red) +
+                                Text(viewModel.weeklyDeathsChange)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.gray)
+                            Text("new deaths in the last 7 days")
+                                .foregroundColor(.gray)
+                        }
+                        VStack(alignment: .leading) {
+                            Text(viewModel.totalDeaths)
+                                .font(Font.title2.bold())
+                                .foregroundColor(.red) +
+                                Text(" total deaths")
+                                .foregroundColor(.gray)
                         }
                     }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding(.bottom, 5)
-                    VStack(alignment: .leading) {
-                        Text(viewModel.dailyLatestCases)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.orange) +
-                            Text(viewModel.dailyCasesChange)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.gray)
-                        Text("new cases on \(viewModel.latestDate)")
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading) {
-                        Text(viewModel.weeklyLatestCases)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.orange) +
-                            Text(viewModel.weeklyCasesChange)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.gray)
-                        Text("new cases in the last 7 days")
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading) {
-                        Text(viewModel.totalCases)
-                            .font(Font.title2.bold()) +
-                            Text(" total")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding(.vertical, 10)
-            }
-            Section {
-                VStack(alignment: .leading, spacing: 10) {
-                    VStack(alignment: .leading) {
-                        Text("\(locationSelection.flag()) Deaths")
-                            .font(Font.title2.bold())
-                        Text("within 28 days of positive test")
-                            .foregroundColor(.gray)
-                    }
-                    Chart(data: viewModel.deathsData.suffix(deathsChartCount.numberOfDatapoints()))
-                        .chartStyle(
-                            LineChartStyle(.line, lineColor: .red, lineWidth: 2)
-                        )
-                        .frame(height: chartHeight)
-                    Picker(selection: $deathsChartCount, label:
-                            Text("")
-                    ) {
-                        ForEach(ChartCount.allCases) {
-                            Text($0.rawValue)
-                                .tag($0)
-                        }
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding(.bottom, 5)
-                    VStack(alignment: .leading) {
-                        Text(viewModel.dailyLatestDeaths)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.red) +
-                            Text(viewModel.dailyDeathsChange)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.gray)
-                        Text("new deaths on \(viewModel.latestDate)")
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading) {
-                        Text(viewModel.weeklyLatestDeaths)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.red) +
-                            Text(viewModel.weeklyDeathsChange)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.gray)
-                        Text("new deaths in the last 7 days")
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading) {
-                        Text(viewModel.totalDeaths)
-                            .font(Font.title2.bold()) +
-                            Text(" total")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding(.vertical, 10)
-            }
-            Section {
-                Link(destination: Constants.appStoreStory) {
-                    Label("Get the Contact Tracing app", systemImage: "figure.stand.line.dotted.figure.stand")
-                        .padding(.vertical)
-                        .font(Font.body.bold())
-                }
-                Link(destination: Constants.rNumberUK) {
-                    Label("R-number and Growth Rate", systemImage: "number")
-                        .padding(.vertical)
-                        .font(Font.body.bold())
-                }
-                Link(destination: Constants.sourceGovUK) {
-                    Label("Source: coronavirus.data.gov.uk", systemImage: "link")
-                        .padding(.vertical)
-                        .font(Font.body.bold())
+                    .padding(.vertical, 10)
                 }
             }
-        }
-        .listStyle(InsetGroupedListStyle())
+            .listStyle(InsetGroupedListStyle())
         .onAppear {
             reloadData()
             WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
@@ -194,6 +167,11 @@ struct ContentView: View {
         if interval >= Constants.updateInterval {
             viewModel.fetchData(locationSelection, clearData: false)
         }
+    }
+    
+    private var deathsData: [Double] {
+        showRelativeChartData ? viewModel.relativeDeathsData.suffix(casesChartCount.numberOfDatapoints()) :
+            viewModel.rawDeathsData.suffix(casesChartCount.numberOfDatapoints())
     }
 }
 
