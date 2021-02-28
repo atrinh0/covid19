@@ -14,6 +14,7 @@ struct RNumberView: View {
                 .navigationTitle(Text("R value"))
                 .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
