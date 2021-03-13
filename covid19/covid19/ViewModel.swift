@@ -93,7 +93,7 @@ class ViewModel: ObservableObject {
             .store(in: &cancellable)
         
         timer?.invalidate()
-        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateFooterText), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(updateFooterText), userInfo: nil, repeats: true)
     }
     
     var isLoading: Bool {
@@ -110,8 +110,7 @@ class ViewModel: ObservableObject {
         let interval = abs(date.timeIntervalSinceNow)
         
         if interval < 60 {
-            let seconds = Int(interval)
-            return seconds == 1 ? "1 second ago" : "\(seconds) seconds ago"
+            return "moments ago"
         }
         let minutes = Int(interval/60)
         return minutes == 1 ? "1 minute ago" : "\(minutes) minutes ago"

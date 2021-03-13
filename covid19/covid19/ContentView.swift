@@ -20,29 +20,8 @@ struct ContentView: View {
     private let chartHeight: CGFloat = 200
     
     var body: some View {
+        NavigationView {
             List {
-                Section {
-                    HStack() {
-                        Text(locationSelection.rawValue)
-                            .lineLimit(0)
-                            .font(Font.title2.bold())
-                        Spacer()
-                        Picker(selection: $locationSelection, label:
-                                Image(systemName: "chevron.down.circle.fill")
-                                .font(Font.title2.bold())
-                        ) {
-                            ForEach(Location.allCases) {
-                                Text($0.rawValue)
-                                    .tag($0)
-                            }
-                        }
-                        .onChange(of: locationSelection) { _ in
-                            reloadData()
-                        }
-                        .pickerStyle(MenuPickerStyle())
-                    }
-                    .padding([.vertical])
-                }
                 Section {
                     Text(viewModel.footerText)
                         .padding([.vertical])
@@ -139,6 +118,22 @@ struct ContentView: View {
                 }
             }
             .listStyle(InsetGroupedListStyle())
+            .navigationTitle(Text(locationSelection.rawValue))
+            .navigationBarItems(trailing: Picker(selection: $locationSelection, label:
+                                                    Image(systemName: "chevron.down.circle.fill")
+                                                    .font(Font.title2.bold())
+                                ) {
+                                    ForEach(Location.allCases) {
+                                        Text($0.rawValue)
+                                            .tag($0)
+                                    }
+                                }
+                                .onChange(of: locationSelection) { _ in
+                                    reloadData()
+                                }
+                                .pickerStyle(MenuPickerStyle()))
+            
+        }
         .onAppear {
             reloadData()
             WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
