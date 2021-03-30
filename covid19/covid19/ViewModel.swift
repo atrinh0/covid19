@@ -120,12 +120,12 @@ class ViewModel: ObservableObject {
         updateFooterText()
         if let latestRecord = data.first {
             if let cases = latestRecord.cases, cases > 0 {
-                dailyLatestCases = "+\(cases.formattedWithSeparator)"
+                dailyLatestCases = "\(cases.formattedWithSeparator)"
             } else {
                 dailyLatestCases = "0"
             }
             if let deaths = latestRecord.deaths, deaths > 0 {
-                dailyLatestDeaths = "+\(deaths.formattedWithSeparator)"
+                dailyLatestDeaths = "\(deaths.formattedWithSeparator)"
             } else {
                 dailyLatestDeaths = "0"
             }
@@ -170,9 +170,9 @@ class ViewModel: ObservableObject {
             let deathsMinusOrPlus = deathsDifference < 0 ? "-" : "+"
             let deathsPercentageChange: Double = Double(abs(deathsDifference))/Double(priorWeekDeaths) * 100
             
-            weeklyLatestCases = "+\(weeklyCases.formattedWithSeparator)"
+            weeklyLatestCases = "\(weeklyCases.formattedWithSeparator)"
             weeklyCasesChange = " (\(casesMinusOrPlus)\(abs(casesDifference).formattedWithSeparator), \(casesMinusOrPlus)\(casesPercentageChange.rounded(toPlaces: 1))%)"
-            weeklyLatestDeaths = "+\(weeklyDeaths.formattedWithSeparator)"
+            weeklyLatestDeaths = "\(weeklyDeaths.formattedWithSeparator)"
             weeklyDeathsChange = " (\(deathsMinusOrPlus)\(abs(deathsDifference).formattedWithSeparator), \(casesMinusOrPlus)\(deathsPercentageChange.rounded(toPlaces: 1))%)"
         }
         

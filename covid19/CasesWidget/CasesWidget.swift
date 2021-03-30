@@ -160,7 +160,7 @@ struct WidgetView: View {
     
     private func formatCount(val: Int?) -> String {
         if let val = val {
-            return "+\(val.formattedWithSeparator)"
+            return "\(val.formattedWithSeparator)"
         }
         return " "
     }
