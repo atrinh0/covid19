@@ -106,11 +106,11 @@ struct WidgetView: View {
                     .padding(.horizontal, 7)
                 Chart(data: entry.deathsData.suffix(isWide ? 183 : 91))
                     .chartStyle(
-                        LineChartStyle(.line, lineColor: .red, lineWidth: 2)
+                        LineChartStyle(.line, lineColor: Constants.deathsColor, lineWidth: 2)
                     )
                 Chart(data: entry.casesData.suffix(isWide ? 183 : 91))
                     .chartStyle(
-                        LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
+                        LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
                     )
             }
             .padding(.horizontal, -7)
@@ -119,7 +119,7 @@ struct WidgetView: View {
                     HStack {
                         Text(formatCount(val: entry.cases))
                             .font(Font.title2.bold())
-                            .foregroundColor(.orange) +
+                            .foregroundColor(Constants.casesColor) +
                             Text(" cases")
                             .font(Font.caption.bold())
                         Spacer()
@@ -128,7 +128,7 @@ struct WidgetView: View {
                     HStack {
                         Text(formatCount(val: entry.deaths))
                             .font(Font.title2.bold())
-                            .foregroundColor(.red) +
+                            .foregroundColor(Constants.deathsColor) +
                             Text(" deaths")
                             .font(Font.caption.bold())
                         Spacer()
@@ -140,14 +140,14 @@ struct WidgetView: View {
                     HStack {
                         Text(formatCount(val: entry.cases))
                             .font(Font.title2.bold())
-                            .foregroundColor(.orange) +
+                            .foregroundColor(Constants.casesColor) +
                             Text(" cases")
                             .font(Font.caption.bold())
                     }
                     HStack {
                         Text(formatCount(val: entry.deaths))
                             .font(Font.title2.bold())
-                            .foregroundColor(.red) +
+                            .foregroundColor(Constants.deathsColor) +
                             Text(" deaths")
                             .font(Font.caption.bold())
                     }

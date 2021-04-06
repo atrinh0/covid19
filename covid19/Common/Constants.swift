@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum Location: String, CaseIterable, Identifiable {
     case uk = "🇬🇧 United Kingdom"
@@ -87,4 +88,7 @@ struct Constants {
     
     static let lastModifiedKey = "LastModified"
     static let backgroundFetchId = "com.atrinh.covid.fetch"
+    
+    static let casesColor: Color = .orange
+    static let deathsColor: Color = .red
 }

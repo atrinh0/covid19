@@ -31,12 +31,12 @@ struct ContentView: View {
                         ZStack {
                             Chart(data: viewModel.casesData.suffix(casesChartCount.numberOfDatapoints()))
                                 .chartStyle(
-                                    LineChartStyle(.line, lineColor: .orange, lineWidth: 2)
+                                    LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
                                 )
                                 .frame(height: chartHeight)
                             Chart(data: deathsData)
                                 .chartStyle(
-                                    LineChartStyle(.line, lineColor: .red, lineWidth: 2)
+                                    LineChartStyle(.line, lineColor: Constants.deathsColor, lineWidth: 2)
                                 )
                                 .frame(height: chartHeight)
                         }
@@ -62,7 +62,7 @@ struct ContentView: View {
                         VStack(alignment: .leading) {
                             Text(viewModel.dailyLatestCases)
                                 .font(Font.title2.bold())
-                                .foregroundColor(.orange) +
+                                .foregroundColor(Constants.casesColor) +
                                 Text(viewModel.dailyCasesChange)
                                 .font(Font.title2.bold())
                                 .foregroundColor(.gray)
@@ -72,7 +72,7 @@ struct ContentView: View {
                         VStack(alignment: .leading) {
                             Text(viewModel.weeklyLatestCases)
                                 .font(Font.title2.bold())
-                                .foregroundColor(.orange) +
+                                .foregroundColor(Constants.casesColor) +
                                 Text(viewModel.weeklyCasesChange)
                                 .font(Font.title2.bold())
                                 .foregroundColor(.gray)
@@ -82,14 +82,14 @@ struct ContentView: View {
                         VStack(alignment: .leading) {
                             Text(viewModel.totalCases)
                                 .font(Font.title2.bold())
-                                .foregroundColor(.orange) +
+                                .foregroundColor(Constants.casesColor) +
                                 Text(" total cases")
                                 .foregroundColor(.gray)
                         }
                         VStack(alignment: .leading) {
                             Text(viewModel.dailyLatestDeaths)
                                 .font(Font.title2.bold())
-                                .foregroundColor(.red) +
+                                .foregroundColor(Constants.deathsColor) +
                                 Text(viewModel.dailyDeathsChange)
                                 .font(Font.title2.bold())
                                 .foregroundColor(.gray)
@@ -99,7 +99,7 @@ struct ContentView: View {
                         VStack(alignment: .leading) {
                             Text(viewModel.weeklyLatestDeaths)
                                 .font(Font.title2.bold())
-                                .foregroundColor(.red) +
+                                .foregroundColor(Constants.deathsColor) +
                                 Text(viewModel.weeklyDeathsChange)
                                 .font(Font.title2.bold())
                                 .foregroundColor(.gray)
@@ -109,7 +109,7 @@ struct ContentView: View {
                         VStack(alignment: .leading) {
                             Text(viewModel.totalDeaths)
                                 .font(Font.title2.bold())
-                                .foregroundColor(.red) +
+                                .foregroundColor(Constants.deathsColor) +
                                 Text(" total deaths")
                                 .foregroundColor(.gray)
                         }
