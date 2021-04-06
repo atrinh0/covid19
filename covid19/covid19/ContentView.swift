@@ -145,6 +145,7 @@ struct ContentView: View {
             reloadData()
             WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     private func reloadData() {
