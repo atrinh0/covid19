@@ -11,7 +11,7 @@ struct RNumberView: View {
     var body: some View {
         NavigationView {
             WebView(request: URLRequest(url: Constants.rNumberUK))
-                .navigationTitle(Text("R value"))
+                .navigationTitle(Text(Constants.rNumberUKTitle))
                 .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())

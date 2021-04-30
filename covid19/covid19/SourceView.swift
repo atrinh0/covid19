@@ -11,7 +11,7 @@ struct SourceView: View {
     var body: some View {
         NavigationView {
             WebView(request: URLRequest(url: Constants.sourceGovUK))
-                .navigationTitle(Text("Gov.uk Source"))
+                .navigationTitle(Text(Constants.sourceGovUKTitle))
                 .navigationBarTitleDisplayMode(.inline)
         }
         .navigationViewStyle(StackNavigationViewStyle())

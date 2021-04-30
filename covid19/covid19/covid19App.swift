@@ -135,11 +135,11 @@ struct covid19App: App {
                     }
                 RNumberView()
                     .tabItem {
-                        Label("R value", systemImage: "r.circle.fill")
+                        Label(Constants.rNumberUKTitle, systemImage: "r.circle.fill")
                     }
                 SourceView()
                     .tabItem {
-                        Label("Gov.uk", systemImage: "cloud.fill")
+                        Label(Constants.sourceGovUKTitle, systemImage: "crown.fill")
                     }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in

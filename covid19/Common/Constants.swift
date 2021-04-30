@@ -91,4 +91,7 @@ struct Constants {
     
     static let casesColor: Color = .orange
     static let deathsColor: Color = .red
+    
+    static let rNumberUKTitle = "R Number"
+    static let sourceGovUKTitle = "UK Summary"
 }
