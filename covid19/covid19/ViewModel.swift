@@ -181,7 +181,7 @@ class ViewModel: ObservableObject {
         let maxCasesScalingValue = (casesArray.max() ?? 1.0) * 1.05
         let maxDeathsScalingValue = (deathsArray.max() ?? 1.0) * 1.05
         casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
-        rawDeathsData = deathsArray.map { $0/(maxDeathsScalingValue * 2)}.reversed()
+        rawDeathsData = deathsArray.map { $0/(maxDeathsScalingValue * 1.5)}.reversed()
         relativeDeathsData = deathsArray.map { $0/maxCasesScalingValue }.reversed()
     }
     

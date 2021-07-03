@@ -34,24 +34,24 @@ enum Location: String, CaseIterable, Identifiable {
 }
 
 enum ChartCount: String, CaseIterable, Identifiable {
-    case oneWeek = "1W"
     case oneMonth = "1M"
     case threeMonths = "3M"
     case sixMonths = "6M"
+    case oneYear = "1Y"
     case all = "ALL"
     
     var id: String { self.rawValue }
     
     func numberOfDatapoints() -> Int {
         switch self {
+        case .oneMonth:
+            return 31
         case .threeMonths:
             return 91
         case .sixMonths:
             return 183
-        case .oneMonth:
-            return 31
-        case .oneWeek:
-            return 7
+        case .oneYear:
+            return 365
         case .all:
             return 1000 // services return max of 1000 items
         }
