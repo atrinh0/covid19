@@ -14,23 +14,8 @@ enum Location: String, CaseIterable, Identifiable {
     case northernIreland = "Northern Ireland"
     case scotland = "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland"
     case wales = "🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales"
-    
+
     var id: String { self.rawValue }
-    
-    func flag() -> String {
-        switch self {
-        case .uk:
-            return "🇬🇧"
-        case .england:
-            return "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
-        case .northernIreland:
-            return "NIR"
-        case .scotland:
-            return "🏴󠁧󠁢󠁳󠁣󠁴󠁿"
-        case .wales:
-            return "🏴󠁧󠁢󠁷󠁬󠁳󠁿"
-        }
-    }
 }
 
 enum ChartCount: String, CaseIterable, Identifiable {
