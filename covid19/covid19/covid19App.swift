@@ -11,12 +11,13 @@ import BackgroundTasks
 import WidgetKit
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions
+                     launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in }
         
         BGTaskScheduler.shared.register(forTaskWithIdentifier: Constants.backgroundFetchId, using: nil) { task in
-            self.handleAppRefreshTask(task: task as! BGAppRefreshTask)
+            self.handleAppRefreshTask(task: task)
         }
         
         return true
@@ -26,7 +27,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         scheduleBackgroundFetch()
     }
     
-    func handleAppRefreshTask(task: BGAppRefreshTask) {
+    func handleAppRefreshTask(task: BGTask) {
         guard let url = URL(string: Constants.url()) else { return }
         
         task.expirationHandler = {
@@ -38,9 +39,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 task.setTaskCompleted(success: false)
                 return
             }
-            let responseData = try! JSONDecoder().decode(ResponseData.self, from: data)
             let previousLastModified = UserDefaults.standard.value(forKey: Constants.lastModifiedKey) as? String ?? ""
-            if let urlReponse = response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
+            if let responseData = try? JSONDecoder().decode(ResponseData.self, from: data),
+               let urlReponse = response as? HTTPURLResponse,
+               let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
                 if previousLastModified == lastModified {
                     task.setTaskCompleted(success: true)
                     return
@@ -67,56 +69,56 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     private func scheduleLocalNotification(response: ResponseData) {
         let data = response.data
-        var latestCases = ""
-        var latestDeaths = ""
-        var totalCases = ""
-        var totalDeaths = ""
+        guard let latestRecord = data.first else { return }
+        
+        var latestCases = "0"
+        var latestDeaths = "0"
+        if let cases = latestRecord.cases, cases > 0 {
+            latestCases = cases.formattedWithSeparator
+        }
+        if let deaths = latestRecord.deaths, deaths > 0 {
+            latestDeaths = deaths.formattedWithSeparator
+        }
+        
+        let totalCases = latestRecord.cumCases?.formattedWithSeparator ?? "0"
+        let totalDeaths = latestRecord.cumDeaths?.formattedWithSeparator ?? "0"
+        
+        var contentTitle = ""
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        if let date = dateFormatter.date(from: latestRecord.date) {
+            dateFormatter.dateFormat = "EEEE d MMMM"
+            contentTitle = "Latest update for \(dateFormatter.string(from: date))"
+        }
+        
         var casesChange = ""
         var deathsChange = ""
-        var latestDate = ""
-        
-        if let latestRecord = data.first {
-            if let cases = latestRecord.cases, cases > 0 {
-                latestCases = cases.formattedWithSeparator
-            } else {
-                latestCases = "0"
+        if data.count > 1 {
+            let secondRecord = data[1]
+            if let cases = latestRecord.cases, let dayBeforeCases = secondRecord.cases {
+                let difference = cases - dayBeforeCases
+                let minusOrPlus = difference < 0 ? "-" : "+"
+                casesChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
             }
-            if let deaths = latestRecord.deaths, deaths > 0 {
-                latestDeaths = deaths.formattedWithSeparator
-            } else {
-                latestDeaths = "0"
-            }
-            totalCases = latestRecord.cumCases?.formattedWithSeparator ?? "0"
-            totalDeaths = latestRecord.cumDeaths?.formattedWithSeparator ?? "0"
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            if let date = dateFormatter.date(from: latestRecord.date) {
-                dateFormatter.dateFormat = "EEEE d MMMM"
-                latestDate = dateFormatter.string(from: date)
-            }
-            
-            if data.count > 1 {
-                let secondRecord = data[1]
-                if let cases = latestRecord.cases, let dayBeforeCases = secondRecord.cases {
-                    let difference = cases - dayBeforeCases
-                    let minusOrPlus = difference < 0 ? "-" : "+"
-                    casesChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
-                }
-                if let deaths = latestRecord.deaths, let dayBeforeDeaths = secondRecord.deaths {
-                    let difference = deaths - dayBeforeDeaths
-                    let minusOrPlus = difference < 0 ? "-" : "+"
-                    deathsChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
-                }
+            if let deaths = latestRecord.deaths, let dayBeforeDeaths = secondRecord.deaths {
+                let difference = deaths - dayBeforeDeaths
+                let minusOrPlus = difference < 0 ? "-" : "+"
+                deathsChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
             }
         }
         
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
-        
         let content = UNMutableNotificationContent()
+        content.title = contentTitle
+        content.body = """
+            😷 \(latestCases)\(casesChange) cases, \(totalCases) total
+            💀 \(latestDeaths)\(deathsChange) deaths, \(totalDeaths) total
+            """
         
-        content.title = "Latest update for \(latestDate)"
-        content.body = "😷 \(latestCases)\(casesChange) cases, \(totalCases) total\n💀 \(latestDeaths)\(deathsChange) deaths, \(totalDeaths) total"
+        addNotification(content: content)
+    }
+    
+    private func addNotification(content: UNMutableNotificationContent) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
         
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
@@ -125,7 +127,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 }
 
 @main
-struct covid19App: App {
+struct Covid19App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {

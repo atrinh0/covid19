@@ -11,12 +11,12 @@ extension Int {
     var formattedWithSeparator: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        return formatter.string(for:  NSNumber(value: self)) ?? ""
+        return formatter.string(for: NSNumber(value: self)) ?? ""
     }
 }
 
 extension Double {
-    func rounded(toPlaces places:Int) -> Double {
+    func rounded(toPlaces places: Int) -> Double {
         let divisor = pow(10.0, Double(places))
         return (self * divisor).rounded() / divisor
     }

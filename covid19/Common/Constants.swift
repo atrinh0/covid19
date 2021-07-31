@@ -9,12 +9,14 @@ import Foundation
 import SwiftUI
 
 enum Location: String, CaseIterable, Identifiable {
-    case uk = "🇬🇧 United Kingdom"
+    case unitedKingdom = "🇬🇧 United Kingdom"
     case england = "🏴󠁧󠁢󠁥󠁮󠁧󠁿 England"
     case northernIreland = "Northern Ireland"
     case scotland = "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland"
     case wales = "🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales"
 
+    // Identifiable
+    // swiftlint:disable:next identifier_name
     var id: String { self.rawValue }
 }
 
@@ -25,6 +27,8 @@ enum ChartCount: String, CaseIterable, Identifiable {
     case oneYear = "1Y"
     case all = "ALL"
     
+    // Identifiable
+    // swiftlint:disable:next identifier_name
     var id: String { self.rawValue }
     
     func numberOfDatapoints() -> Int {
@@ -44,7 +48,9 @@ enum ChartCount: String, CaseIterable, Identifiable {
 }
 
 struct Constants {
-    static func url(location: Location? = .uk) -> String {
+    static func url(location: Location? = .unitedKingdom) -> String {
+        // api url
+        // swiftlint:disable:next line_length
         let url = "https://api.coronavirus.data.gov.uk/v1/data?filters=[FILTER]&structure=%7B%22date%22%3A%22date%22%2C%22newCasesByPublishDate%22%3A%22newCasesByPublishDate%22%2C%22cumCasesByPublishDate%22%3A%22cumCasesByPublishDate%22%2C%22newDeaths28DaysByPublishDate%22%3A%22newDeaths28DaysByPublishDate%22%2C%22cumDeaths28DaysByPublishDate%22%3A%22cumDeaths28DaysByPublishDate%22%7D"
         var filter = "areaType=overview"
         switch location {
@@ -56,7 +62,7 @@ struct Constants {
             filter = "areaType=nation;areaName=scotland"
         case .wales:
             filter = "areaType=nation;areaName=wales"
-        case .none, .uk:
+        case .none, .unitedKingdom:
             filter = "areaType=overview"
         }
         return url.replacingOccurrences(of: "[FILTER]", with: filter)

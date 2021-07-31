@@ -14,21 +14,26 @@ struct Provider: TimelineProvider {
         SimpleEntry(date: Date(), cases: 0, deaths: 0, casesData: [], deathsData: [])
     }
     
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
         URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
-            guard let data = data else { return }
-            let responseData = try! JSONDecoder().decode(ResponseData.self, from: data)
+            guard let data = data,
+                  let responseData = try? JSONDecoder().decode(ResponseData.self, from: data) else { return }
             let entry = SimpleEntry(responseData: responseData, response: response)
             completion(entry)
         }.resume()
     }
     
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
         URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
-            guard let data = data else { return }
-            let responseData = try! JSONDecoder().decode(ResponseData.self, from: data)
+            guard let data = data,
+                  let responseData = try? JSONDecoder().decode(ResponseData.self, from: data),
+                  let fifthteenMinutesLater = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) else {
+                      return
+                  }
+            
             let entry = SimpleEntry(responseData: responseData, response: response)
-            completion(Timeline(entries: [entry], policy: .after(Calendar.current.date(byAdding: .minute, value: 15, to: Date())!)))
+            let timeline = Timeline(entries: [entry], policy: .after(fifthteenMinutesLater))
+            completion(timeline)
         }.resume()
     }
 }
@@ -67,7 +72,9 @@ struct SimpleEntry: TimelineEntry {
         self.casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
         self.deathsData = deathsArray.map { $0/maxDeathsScalingValue }.reversed()
         
-        if let response = response, let urlReponse = response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
+        if let response = response,
+            let urlReponse = response as? HTTPURLResponse,
+            let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
             lastUpdated = lastModified
         } else {
             lastUpdated = ""
@@ -155,7 +162,9 @@ struct WidgetView: View {
             }
         }
         .padding(10)
-        .background(LinearGradient(gradient: Gradient(colors: [Color(UIColor.systemBackground), Color.clear]), startPoint: .top, endPoint: .bottom))
+        .background(LinearGradient(gradient: Gradient(colors: [Color(UIColor.systemBackground), Color.clear]),
+                                   startPoint: .top,
+                                   endPoint: .bottom))
     }
     
     private func formatCount(val: Int?) -> String {

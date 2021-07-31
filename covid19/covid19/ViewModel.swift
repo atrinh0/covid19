@@ -13,7 +13,7 @@ class ViewModel: ObservableObject {
     @Published var lastUpdated: Date = Date.distantPast
     @Published var lastChecked: Date = Date.distantPast
     @Published var footerText = "Loading..."
-    private var error: String? = nil
+    private var error: String?
     
     @Published var dailyLatestCases = "-"
     @Published var dailyCasesChange = ""
@@ -41,31 +41,20 @@ class ViewModel: ObservableObject {
         
         DispatchQueue.main.async {
             self.lastChecked = .distantPast
-            
             if clearData {
-                self.data = []
-                self.lastUpdated = .distantPast
-                self.dailyLatestCases = "-"
-                self.dailyCasesChange = ""
-                self.weeklyLatestCases = "-"
-                self.weeklyCasesChange = ""
-                self.totalCases = "-"
-                self.dailyLatestDeaths = "-"
-                self.dailyDeathsChange = ""
-                self.weeklyLatestDeaths = "-"
-                self.weeklyDeathsChange = ""
-                self.totalDeaths = "-"
-                self.latestDate = "-"
+                self.clearData()
             }
-            
             self.updateFooterText()
         }
         
         let urlString = Constants.url(location: location)
         print("\(urlString)")
-        URLSession.shared.dataTaskPublisher(for: URL(string: urlString)!)
+        guard let url = URL(string: urlString) else { return }
+        
+        URLSession.shared.dataTaskPublisher(for: url)
             .map { output in
-                if let urlReponse = output.response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
+                if let urlReponse = output.response as? HTTPURLResponse,
+                    let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
                     UserDefaults.standard.setValue(lastModified, forKey: Constants.lastModifiedKey)
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = Constants.lastModifiedDateFormat
@@ -92,7 +81,8 @@ class ViewModel: ObservableObject {
             .store(in: &cancellable)
         
         timer?.invalidate()
-        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(updateFooterText), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(updateFooterText),
+                                     userInfo: nil, repeats: true)
     }
     
     var isLoading: Bool {
@@ -104,6 +94,22 @@ class ViewModel: ObservableObject {
     }
     
     // MARK: - Helpers
+    
+    private func clearData() {
+        data = []
+        lastUpdated = .distantPast
+        dailyLatestCases = "-"
+        dailyCasesChange = ""
+        weeklyLatestCases = "-"
+        weeklyCasesChange = ""
+        totalCases = "-"
+        dailyLatestDeaths = "-"
+        dailyDeathsChange = ""
+        weeklyLatestDeaths = "-"
+        weeklyDeathsChange = ""
+        totalDeaths = "-"
+        latestDate = "-"
+    }
     
     private func timeAgo(date: Date) -> String {
         let interval = abs(date.timeIntervalSinceNow)
@@ -153,27 +159,7 @@ class ViewModel: ObservableObject {
             }
         }
         
-        if data.count > 14 {
-            let fortnightCases = data.prefix(14).compactMap({ $0.cases }).reduce(0, { x, y in x + y })
-            let weeklyCases = data.prefix(7).compactMap({ $0.cases }).reduce(0, { x, y in x + y })
-            let fortnightDeaths = data.prefix(14).compactMap({ $0.deaths }).reduce(0, { x, y in x + y })
-            let weeklyDeaths = data.prefix(7).compactMap({ $0.deaths }).reduce(0, { x, y in x + y })
-            
-            let priorWeekCases = fortnightCases - weeklyCases
-            let casesDifference = weeklyCases - priorWeekCases
-            let casesMinusOrPlus = casesDifference < 0 ? "-" : "+"
-            let casesPercentageChange: Double = Double(abs(casesDifference))/Double(priorWeekCases) * 100
-            
-            let priorWeekDeaths = fortnightDeaths - weeklyDeaths
-            let deathsDifference = weeklyDeaths - priorWeekDeaths
-            let deathsMinusOrPlus = deathsDifference < 0 ? "-" : "+"
-            let deathsPercentageChange: Double = Double(abs(deathsDifference))/Double(priorWeekDeaths) * 100
-            
-            weeklyLatestCases = "\(weeklyCases.formattedWithSeparator)"
-            weeklyCasesChange = " (\(casesMinusOrPlus)\(abs(casesDifference).formattedWithSeparator), \(casesMinusOrPlus)\(casesPercentageChange.rounded(toPlaces: 1))%)"
-            weeklyLatestDeaths = "\(weeklyDeaths.formattedWithSeparator)"
-            weeklyDeathsChange = " (\(deathsMinusOrPlus)\(abs(deathsDifference).formattedWithSeparator), \(deathsMinusOrPlus)\(deathsPercentageChange.rounded(toPlaces: 1))%)"
-        }
+        calculateWeeklyChange()
         
         let casesArray = data.map { Double($0.cases ?? 0) }
         let deathsArray = data.map { Double($0.deaths ?? 0) }
@@ -182,6 +168,35 @@ class ViewModel: ObservableObject {
         casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
         rawDeathsData = deathsArray.map { $0/(maxDeathsScalingValue * 1.5)}.reversed()
         relativeDeathsData = deathsArray.map { $0/maxCasesScalingValue }.reversed()
+    }
+    
+    private func calculateWeeklyChange() {
+        if data.count <= 14 {
+            return
+        }
+        
+        let fortnightCases = data.prefix(14).compactMap({ $0.cases }).reduce(0, +)
+        let weeklyCases = data.prefix(7).compactMap({ $0.cases }).reduce(0, +)
+        let fortnightDeaths = data.prefix(14).compactMap({ $0.deaths }).reduce(0, +)
+        let weeklyDeaths = data.prefix(7).compactMap({ $0.deaths }).reduce(0, +)
+        
+        let priorWeekCases = fortnightCases - weeklyCases
+        let casesDifference = weeklyCases - priorWeekCases
+        let casesMinusOrPlus = casesDifference < 0 ? "-" : "+"
+        let casesPercentageChange: Double = Double(abs(casesDifference))/Double(priorWeekCases) * 100
+        
+        let priorWeekDeaths = fortnightDeaths - weeklyDeaths
+        let deathsDifference = weeklyDeaths - priorWeekDeaths
+        let deathsMinusOrPlus = deathsDifference < 0 ? "-" : "+"
+        let deathsPercentageChange: Double = Double(abs(deathsDifference))/Double(priorWeekDeaths) * 100
+        
+        weeklyLatestCases = "\(weeklyCases.formattedWithSeparator)"
+        weeklyCasesChange = " (\(casesMinusOrPlus)\(abs(casesDifference).formattedWithSeparator)"
+        weeklyCasesChange += ", \(casesMinusOrPlus)\(casesPercentageChange.rounded(toPlaces: 1))%)"
+        
+        weeklyLatestDeaths = "\(weeklyDeaths.formattedWithSeparator)"
+        weeklyDeathsChange = " (\(deathsMinusOrPlus)\(abs(deathsDifference).formattedWithSeparator)"
+        weeklyDeathsChange += ", \(deathsMinusOrPlus)\(deathsPercentageChange.rounded(toPlaces: 1))%)"
     }
     
     @objc func updateFooterText() {

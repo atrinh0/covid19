@@ -11,7 +11,7 @@ import WidgetKit
 
 struct ContentView: View {
     @Environment(\.openURL) var openURL
-    @State private var locationSelection = Location.uk
+    @State private var locationSelection = Location.unitedKingdom
     @ObservedObject private var viewModel = ViewModel()
     @State private var casesChartCount = ChartCount.all
     @State private var showRelativeChartData = false
