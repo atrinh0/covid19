@@ -53,7 +53,7 @@ enum ChartCount: String, CaseIterable, Identifiable {
         case .oneYear:
             return 365
         case .all:
-            return 1000 // services return max of 1000 items
+            return 1_000 // services return max of 1000 items
         }
     }
 }
@@ -87,6 +87,8 @@ struct Constants {
     static let updateInterval: TimeInterval = 60*15 // 15 min
     
     static let lastModifiedKey = "LastModified"
+    static let lastModifiedHeaderFieldKey = "Last-Modified"
+    static let lastModifiedDateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
     static let backgroundFetchId = "com.atrinh.covid.fetch"
     
     static let casesColor: Color = .orange

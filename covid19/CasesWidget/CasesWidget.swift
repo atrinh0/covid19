@@ -67,7 +67,7 @@ struct SimpleEntry: TimelineEntry {
         self.casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
         self.deathsData = deathsArray.map { $0/maxDeathsScalingValue }.reversed()
         
-        if let response = response, let urlReponse = response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields["Last-Modified"] as? String {
+        if let response = response, let urlReponse = response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
             lastUpdated = lastModified
         } else {
             lastUpdated = ""
@@ -167,7 +167,7 @@ struct WidgetView: View {
     
     private func lastUpdated(val: String) -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
+        dateFormatter.dateFormat = Constants.lastModifiedDateFormat
         if let serverDate = dateFormatter.date(from: val) {
             return timeAgo(date: serverDate)
         }

@@ -14,7 +14,7 @@ struct SourceView: View {
                 .navigationTitle(Text(Constants.sourceGovUKTitle))
                 .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(.stack)
     }
 }
 

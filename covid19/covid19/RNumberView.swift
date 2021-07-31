@@ -14,7 +14,7 @@ struct RNumberView: View {
                 .navigationTitle(Text(Constants.rNumberUKTitle))
                 .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(.stack)
     }
 }
 

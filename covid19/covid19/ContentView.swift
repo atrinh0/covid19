@@ -40,30 +40,26 @@ struct ContentView: View {
                                 )
                                 .frame(height: chartHeight)
                         }
-                        Picker(selection: $casesChartCount, label:
-                                Text("")
-                        ) {
+                        Picker(selection: $casesChartCount) {
                             ForEach(ChartCount.allCases) {
                                 Text($0.rawValue)
                                     .tag($0)
                             }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        Picker(selection: $showRelativeChartData, label:
-                                Text("")
-                        ) {
+                        } label: { }
+                        .pickerStyle(.segmented)
+                        Picker(selection: $showRelativeChartData) {
                             Text("Relative")
                                 .tag(true)
                             Text("Emphasised")
                                 .tag(false)
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
+                        } label: { }
+                        .pickerStyle(.segmented)
                         .padding(.bottom, 5)
                         VStack(alignment: .leading) {
                             Text(viewModel.dailyLatestCases)
                                 .font(Font.title2.bold())
                                 .foregroundColor(Constants.casesColor) +
-                                Text(viewModel.dailyCasesChange)
+                            Text(viewModel.dailyCasesChange)
                                 .font(Font.title2.bold())
                                 .foregroundColor(.gray)
                             Text("new cases on \(viewModel.latestDate)")
@@ -73,7 +69,7 @@ struct ContentView: View {
                             Text(viewModel.weeklyLatestCases)
                                 .font(Font.title2.bold())
                                 .foregroundColor(Constants.casesColor) +
-                                Text(viewModel.weeklyCasesChange)
+                            Text(viewModel.weeklyCasesChange)
                                 .font(Font.title2.bold())
                                 .foregroundColor(.gray)
                             Text("new cases in the last 7 days")
@@ -83,14 +79,14 @@ struct ContentView: View {
                             Text(viewModel.totalCases)
                                 .font(Font.title2.bold())
                                 .foregroundColor(Constants.casesColor) +
-                                Text(" total cases")
+                            Text(" total cases")
                                 .foregroundColor(.gray)
                         }
                         VStack(alignment: .leading) {
                             Text(viewModel.dailyLatestDeaths)
                                 .font(Font.title2.bold())
                                 .foregroundColor(Constants.deathsColor) +
-                                Text(viewModel.dailyDeathsChange)
+                            Text(viewModel.dailyDeathsChange)
                                 .font(Font.title2.bold())
                                 .foregroundColor(.gray)
                             Text("new deaths on \(viewModel.latestDate)")
@@ -100,7 +96,7 @@ struct ContentView: View {
                             Text(viewModel.weeklyLatestDeaths)
                                 .font(Font.title2.bold())
                                 .foregroundColor(Constants.deathsColor) +
-                                Text(viewModel.weeklyDeathsChange)
+                            Text(viewModel.weeklyDeathsChange)
                                 .font(Font.title2.bold())
                                 .foregroundColor(.gray)
                             Text("new deaths in the last 7 days")
@@ -110,28 +106,15 @@ struct ContentView: View {
                             Text(viewModel.totalDeaths)
                                 .font(Font.title2.bold())
                                 .foregroundColor(Constants.deathsColor) +
-                                Text(" total deaths")
+                            Text(" total deaths")
                                 .foregroundColor(.gray)
                         }
                     }
                     .padding(.vertical, 10)
                 }
             }
-            .listStyle(InsetGroupedListStyle())
             .navigationTitle(Text(locationSelection.rawValue))
-            .navigationBarItems(trailing: Picker(selection: $locationSelection, label:
-                                                    Image(systemName: "chevron.down.circle.fill")
-                                                    .font(Font.title2.bold())
-                                ) {
-                                    ForEach(Location.allCases) {
-                                        Text($0.rawValue)
-                                            .tag($0)
-                                    }
-                                }
-                                .onChange(of: locationSelection) { _ in
-                                    reloadData()
-                                }
-                                .pickerStyle(MenuPickerStyle()))
+            .navigationBarItems(trailing: sortButton)
             
         }
         .onAppear {
@@ -145,7 +128,7 @@ struct ContentView: View {
             reloadData()
             WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
         }
-        .navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(.stack)
     }
     
     private func reloadData() {
@@ -167,7 +150,23 @@ struct ContentView: View {
     
     private var deathsData: [Double] {
         showRelativeChartData ? viewModel.relativeDeathsData.suffix(casesChartCount.numberOfDatapoints()) :
-            viewModel.rawDeathsData.suffix(casesChartCount.numberOfDatapoints())
+        viewModel.rawDeathsData.suffix(casesChartCount.numberOfDatapoints())
+    }
+    
+    private var sortButton: some View {
+        Picker(selection: $locationSelection) {
+            ForEach(Location.allCases) {
+                Text($0.rawValue)
+                    .tag($0)
+            }
+        } label: {
+            Image(systemName: "chevron.down.circle.fill")
+                .font(Font.title2.bold())
+        }
+        .onChange(of: locationSelection) { _ in
+            reloadData()
+        }
+        .pickerStyle(.menu)
     }
 }
 

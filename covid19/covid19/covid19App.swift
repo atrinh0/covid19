@@ -27,18 +27,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     
     func handleAppRefreshTask(task: BGAppRefreshTask) {
+        guard let url = URL(string: Constants.url()) else { return }
+        
         task.expirationHandler = {
             task.setTaskCompleted(success: false)
         }
         
-        URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
+        URLSession.shared.dataTask(with: url) { data, response, _ in
             guard let data = data else {
                 task.setTaskCompleted(success: false)
                 return
             }
             let responseData = try! JSONDecoder().decode(ResponseData.self, from: data)
             let previousLastModified = UserDefaults.standard.value(forKey: Constants.lastModifiedKey) as? String ?? ""
-            if let urlReponse = response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields["Last-Modified"] as? String {
+            if let urlReponse = response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
                 if previousLastModified == lastModified {
                     task.setTaskCompleted(success: true)
                     return
@@ -109,7 +111,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             }
         }
         
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge], completionHandler: { _, _ in })
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
         
         let content = UNMutableNotificationContent()
         
@@ -133,13 +135,13 @@ struct covid19App: App {
                     .tabItem {
                         Label("Graphs", systemImage: "chart.bar.xaxis")
                     }
-                RNumberView()
-                    .tabItem {
-                        Label(Constants.rNumberUKTitle, systemImage: "r.circle.fill")
-                    }
                 SourceView()
                     .tabItem {
                         Label(Constants.sourceGovUKTitle, systemImage: "crown.fill")
+                    }
+                RNumberView()
+                    .tabItem {
+                        Label(Constants.rNumberUKTitle, systemImage: "r.circle.fill")
                     }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)) { _ in

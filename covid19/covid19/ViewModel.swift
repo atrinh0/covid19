@@ -34,8 +34,7 @@ class ViewModel: ObservableObject {
     var cancellable: Set<AnyCancellable> = Set()
     var timer: Timer?
     
-    init() {
-    }
+    init() { }
     
     func fetchData(_ location: Location, clearData: Bool) {
         error = nil
@@ -58,7 +57,7 @@ class ViewModel: ObservableObject {
                 self.totalDeaths = "-"
                 self.latestDate = "-"
             }
-
+            
             self.updateFooterText()
         }
         
@@ -66,10 +65,10 @@ class ViewModel: ObservableObject {
         print("\(urlString)")
         URLSession.shared.dataTaskPublisher(for: URL(string: urlString)!)
             .map { output in
-                if let urlReponse = output.response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields["Last-Modified"] as? String {
+                if let urlReponse = output.response as? HTTPURLResponse, let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
                     UserDefaults.standard.setValue(lastModified, forKey: Constants.lastModifiedKey)
                     let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
+                    dateFormatter.dateFormat = Constants.lastModifiedDateFormat
                     if let serverDate = dateFormatter.date(from: lastModified) {
                         DispatchQueue.main.async {
                             self.lastUpdated = serverDate
@@ -79,17 +78,17 @@ class ViewModel: ObservableObject {
                 return output.data
             }
             .decode(type: ResponseData.self, decoder: JSONDecoder())
-            .sink(receiveCompletion: { completion in
+            .sink { completion in
                 if case .failure(let error) = completion {
                     self.error = error.localizedDescription
                 }
-            }, receiveValue: { value in
+            } receiveValue: { value in
                 DispatchQueue.main.async {
                     self.data = value.data
                     self.lastChecked = Date()
                     self.updateData()
                 }
-            })
+            }
             .store(in: &cancellable)
         
         timer?.invalidate()
@@ -105,7 +104,7 @@ class ViewModel: ObservableObject {
     }
     
     // MARK: - Helpers
-
+    
     private func timeAgo(date: Date) -> String {
         let interval = abs(date.timeIntervalSinceNow)
         
