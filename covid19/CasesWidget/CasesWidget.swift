@@ -27,12 +27,12 @@ struct Provider: TimelineProvider {
         URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
             guard let data = data,
                   let responseData = try? JSONDecoder().decode(ResponseData.self, from: data),
-                  let fifthteenMinutesLater = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) else {
+                  let fifthteenMinutesFromNow = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) else {
                       return
                   }
             
             let entry = SimpleEntry(responseData: responseData, response: response)
-            let timeline = Timeline(entries: [entry], policy: .after(fifthteenMinutesLater))
+            let timeline = Timeline(entries: [entry], policy: .after(fifthteenMinutesFromNow))
             completion(timeline)
         }.resume()
     }
