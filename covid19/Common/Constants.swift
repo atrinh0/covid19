@@ -26,11 +26,11 @@ enum ChartCount: String, CaseIterable, Identifiable {
     case sixMonths = "6M"
     case oneYear = "1Y"
     case all = "ALL"
-    
+
     // Identifiable
     // swiftlint:disable:next identifier_name
     var id: String { self.rawValue }
-    
+
     func numberOfDatapoints() -> Int {
         switch self {
         case .oneMonth:
@@ -67,24 +67,24 @@ struct Constants {
         }
         return url.replacingOccurrences(of: "[FILTER]", with: filter)
     }
-    
+
     static let appStoreStory = URL(string: "https://apps.apple.com/gb/story/id1532087825")!
     static let rNumberUK = URL(string: "https://www.gov.uk/guidance/the-r-number-in-the-uk")!
     static let sourceGovUK = URL(string: "https://coronavirus.data.gov.uk")!
-    
+
     static let widgetName = "CasesWidget"
-    
+
     static let aLongTimeAgo: TimeInterval = 60*60*24*120 // 120 days
     static let updateInterval: TimeInterval = 60*15 // 15 min
-    
+
     static let lastModifiedKey = "LastModified"
     static let lastModifiedHeaderFieldKey = "Last-Modified"
     static let lastModifiedDateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
     static let backgroundFetchId = "com.atrinh.covid.fetch"
-    
+
     static let casesColor: Color = .orange
     static let deathsColor: Color = .red
-    
+
     static let rNumberUKTitle = "R Number"
     static let sourceGovUKTitle = "UK Summary"
 }

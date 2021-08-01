@@ -13,7 +13,7 @@ struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), cases: 0, deaths: 0, casesData: [], deathsData: [])
     }
-    
+
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
         URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
             guard let data = data,
@@ -22,7 +22,7 @@ struct Provider: TimelineProvider {
             completion(entry)
         }.resume()
     }
-    
+
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
         URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
             guard let data = data,
@@ -30,7 +30,7 @@ struct Provider: TimelineProvider {
                   let fifthteenMinutesFromNow = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) else {
                       return
                   }
-            
+
             let entry = SimpleEntry(responseData: responseData, response: response)
             let timeline = Timeline(entries: [entry], policy: .after(fifthteenMinutesFromNow))
             completion(timeline)
@@ -45,7 +45,7 @@ struct SimpleEntry: TimelineEntry {
     let casesData: [Double]
     let deathsData: [Double]
     let lastUpdated: String
-    
+
     init(date: Date, cases: Int, deaths: Int, casesData: [Double], deathsData: [Double]) {
         self.date = date
         self.cases = cases
@@ -54,7 +54,7 @@ struct SimpleEntry: TimelineEntry {
         self.deathsData = deathsData
         self.lastUpdated = ""
     }
-    
+
     init(date: Date? = Date(), responseData: ResponseData, response: URLResponse?) {
         self.date = date ?? Date()
         if let firstRecord = responseData.data.first, let cases = firstRecord.cases, let deaths = firstRecord.deaths {
@@ -64,14 +64,14 @@ struct SimpleEntry: TimelineEntry {
             self.cases = 0
             self.deaths = 0
         }
-        
+
         let casesArray = responseData.data.map { Double($0.cases ?? 0) }
         let deathsArray = responseData.data.map { Double($0.deaths ?? 0) }
         let maxCasesScalingValue = (casesArray.max() ?? 1.0) * 1.05
         let maxDeathsScalingValue = (deathsArray.max() ?? 1.0) * 1.05 * 2
         self.casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
         self.deathsData = deathsArray.map { $0/maxDeathsScalingValue }.reversed()
-        
+
         if let response = response,
             let urlReponse = response as? HTTPURLResponse,
             let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
@@ -85,7 +85,7 @@ struct SimpleEntry: TimelineEntry {
 struct CasesWidgetEntryView: View {
     var entry: Provider.Entry
     @Environment(\.widgetFamily) var family
-    
+
     var body: some View {
         switch family {
         case .systemSmall:
@@ -166,14 +166,14 @@ struct WidgetView: View {
                                    startPoint: .top,
                                    endPoint: .bottom))
     }
-    
+
     private func formatCount(val: Int?) -> String {
         if let val = val {
             return "\(val.formattedWithSeparator)"
         }
         return " "
     }
-    
+
     private func lastUpdated(val: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = Constants.lastModifiedDateFormat
@@ -182,10 +182,10 @@ struct WidgetView: View {
         }
         return ""
     }
-    
+
     private func timeAgo(date: Date) -> String {
         let interval = abs(date.timeIntervalSinceNow)
-        
+
         if interval < 60*15 {
             return "just now"
         }
@@ -206,7 +206,7 @@ struct WidgetView: View {
 @main
 struct CasesWidget: Widget {
     let kind: String = Constants.widgetName
-    
+
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             CasesWidgetEntryView(entry: entry)

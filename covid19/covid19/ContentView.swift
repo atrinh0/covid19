@@ -15,10 +15,10 @@ struct ContentView: View {
     @ObservedObject private var viewModel = ViewModel()
     @State private var casesChartCount = ChartCount.all
     @State private var showRelativeChartData = false
-    
+
     let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     private let chartHeight: CGFloat = 200
-    
+
     var body: some View {
         NavigationView {
             List {
@@ -115,7 +115,7 @@ struct ContentView: View {
             }
             .navigationTitle(Text(locationSelection.rawValue))
             .navigationBarItems(trailing: sortButton)
-            
+
         }
         .onAppear {
             reloadData()
@@ -130,29 +130,29 @@ struct ContentView: View {
         }
         .navigationViewStyle(.stack)
     }
-    
+
     private func reloadData() {
         viewModel.fetchData(locationSelection, clearData: true)
         updateIfNeeded()
     }
-    
+
     private func updateIfNeeded() {
         if viewModel.isLoading || viewModel.isReloading {
             return
         }
-        
+
         // check every 15 minutes
         let interval = abs(viewModel.lastChecked.timeIntervalSinceNow)
         if interval >= Constants.updateInterval {
             viewModel.fetchData(locationSelection, clearData: false)
         }
     }
-    
+
     private var deathsData: [Double] {
         showRelativeChartData ? viewModel.relativeDeathsData.suffix(casesChartCount.numberOfDatapoints()) :
         viewModel.rawDeathsData.suffix(casesChartCount.numberOfDatapoints())
     }
-    
+
     private var sortButton: some View {
         Picker(selection: $locationSelection) {
             ForEach(Location.allCases) {

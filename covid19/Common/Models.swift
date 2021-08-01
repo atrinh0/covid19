@@ -11,7 +11,7 @@ struct Info: Decodable {
     let cumCases: Int?
     let deaths: Int?
     let cumDeaths: Int?
-    
+
     enum CodingKeys: String, CodingKey {
         case date
         case cases = "newCasesByPublishDate"
@@ -19,7 +19,7 @@ struct Info: Decodable {
         case deaths = "newDeaths28DaysByPublishDate"
         case cumDeaths = "cumDeaths28DaysByPublishDate"
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         date = try container.decode(String.self, forKey: .date)

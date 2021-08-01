@@ -15,25 +15,25 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                      launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in }
-        
+
         BGTaskScheduler.shared.register(forTaskWithIdentifier: Constants.backgroundFetchId, using: nil) { task in
             self.handleAppRefreshTask(task: task)
         }
-        
+
         return true
     }
-    
+
     func applicationDidEnterBackground(_ application: UIApplication) {
         scheduleBackgroundFetch()
     }
-    
+
     func handleAppRefreshTask(task: BGTask) {
         guard let url = URL(string: Constants.url()) else { return }
-        
+
         task.expirationHandler = {
             task.setTaskCompleted(success: false)
         }
-        
+
         URLSession.shared.dataTask(with: url) { data, response, _ in
             guard let data = data else {
                 task.setTaskCompleted(success: false)
@@ -53,10 +53,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 task.setTaskCompleted(success: true)
             }
         }.resume()
-        
+
         scheduleBackgroundFetch()
     }
-    
+
     private func scheduleBackgroundFetch() {
         let fetchTask = BGAppRefreshTaskRequest(identifier: Constants.backgroundFetchId)
         fetchTask.earliestBeginDate = Date(timeIntervalSinceNow: Constants.updateInterval)
@@ -66,11 +66,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             print("Unable to submit task: \(error.localizedDescription)")
         }
     }
-    
+
     private func scheduleLocalNotification(response: ResponseData) {
         let data = response.data
         guard let latestRecord = data.first else { return }
-        
+
         var latestCases = "0"
         var latestDeaths = "0"
         if let cases = latestRecord.cases, cases > 0 {
@@ -79,10 +79,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if let deaths = latestRecord.deaths, deaths > 0 {
             latestDeaths = deaths.formattedWithSeparator
         }
-        
+
         let totalCases = latestRecord.cumCases?.formattedWithSeparator ?? "0"
         let totalDeaths = latestRecord.cumDeaths?.formattedWithSeparator ?? "0"
-        
+
         var contentTitle = ""
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -90,7 +90,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             dateFormatter.dateFormat = "EEEE d MMMM"
             contentTitle = "Latest update for \(dateFormatter.string(from: date))"
         }
-        
+
         var casesChange = ""
         var deathsChange = ""
         if data.count > 1 {
@@ -106,20 +106,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 deathsChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
             }
         }
-        
+
         let content = UNMutableNotificationContent()
         content.title = contentTitle
         content.body = """
             😷 \(latestCases)\(casesChange) cases, \(totalCases) total
             💀 \(latestDeaths)\(deathsChange) deaths, \(totalDeaths) total
             """
-        
+
         addNotification(content: content)
     }
-    
+
     private func addNotification(content: UNMutableNotificationContent) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
-        
+
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request)
@@ -129,7 +129,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct Covid19App: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
+
     var body: some Scene {
         WindowGroup {
             TabView {
