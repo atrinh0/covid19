@@ -34,8 +34,6 @@ class ViewModel: ObservableObject {
     var cancellable: Set<AnyCancellable> = Set()
     var timer: Timer?
 
-    init() { }
-
     func fetchData(_ location: Location, clearData: Bool) {
         error = nil
 

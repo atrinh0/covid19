@@ -154,11 +154,13 @@ struct ContentView: View {
     }
 
     private var sortButton: some View {
-        Picker(selection: $locationSelection) {
-            ForEach(Location.allCases) {
-                Text($0.rawValue)
-                    .tag($0)
-            }
+        Menu {
+            Picker(selection: $locationSelection) {
+                ForEach(Location.allCases) {
+                    Text($0.rawValue)
+                        .tag($0)
+                }
+            } label: { Text("Location") }
         } label: {
             Image(systemName: "chevron.down.circle.fill")
                 .font(Font.title2.bold())
@@ -166,7 +168,6 @@ struct ContentView: View {
         .onChange(of: locationSelection) { _ in
             reloadData()
         }
-        .pickerStyle(.menu)
     }
 }
 
