@@ -8,11 +8,19 @@
 import SwiftUI
 
 struct RNumberView: View {
+    @State private var reload: Bool = false
+
     var body: some View {
         NavigationView {
-            WebView(request: URLRequest(url: Constants.rNumberUK))
+            WebView(request: URLRequest(url: Constants.rNumberUK), reload: reload)
                 .navigationTitle(Text(Constants.rNumberUKTitle))
                 .navigationBarTitleDisplayMode(.inline)
+                .navigationBarItems(trailing: Button {
+                    reload.toggle()
+                } label: {
+                    Image(systemName: "arrow.clockwise.circle.fill")
+                        .font(Font.title2.bold())
+                })
         }
         .navigationViewStyle(.stack)
     }
