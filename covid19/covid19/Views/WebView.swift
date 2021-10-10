@@ -13,7 +13,7 @@ struct WebView: UIViewRepresentable {
     let reload: Bool
 
     func makeUIView(context: Context) -> WKWebView {
-        return WKWebView()
+        WKWebView()
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {

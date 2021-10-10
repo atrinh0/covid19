@@ -208,9 +208,9 @@ class ViewModel: ObservableObject {
         let modified = dateFormatter.string(from: lastUpdated)
             .replacingOccurrences(of: " AM", with: "am")
             .replacingOccurrences(of: " PM", with: "pm")
-        let lastUpdatedString = "Source last updated on\n\(modified)"
+        let lastUpdatedString = "Last updated on \(modified)"
         let lastCheckedString = isReloading ? "Checking..." : "Last checked \(timeAgo(date: lastChecked))"
 
-        footerText = isLoading ? "Loading..." : "\(lastUpdatedString)\n\n\(lastCheckedString)"
+        footerText = isLoading ? "Loading..." : "\(lastUpdatedString)\n\(lastCheckedString)"
     }
 }
