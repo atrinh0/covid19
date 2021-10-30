@@ -27,7 +27,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         scheduleBackgroundFetch()
     }
 
-    func handleAppRefreshTask(task: BGTask) {
+    private func handleAppRefreshTask(task: BGTask) {
         guard let url = URL(string: Constants.url()) else { return }
 
         task.expirationHandler = {

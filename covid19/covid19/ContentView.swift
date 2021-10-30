@@ -16,7 +16,7 @@ struct ContentView: View {
     @State private var casesChartCount = ChartCount.all
     @State private var showRelativeChartData = false
 
-    let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
+    private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     private let chartHeight: CGFloat = 200
 
     var body: some View {
@@ -28,7 +28,7 @@ struct ContentView: View {
                         .foregroundColor(.gray)
                     ZStack {
                         Color.gray.opacity(0.04)
-                        Chart(data: viewModel.casesData.suffix(casesChartCount.numberOfDatapoints()))
+                        Chart(data: viewModel.casesData.suffix(casesChartCount.numberOfDatapoints))
                             .chartStyle(
                                 LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
                             )
@@ -147,8 +147,8 @@ struct ContentView: View {
     }
 
     private var deathsData: [Double] {
-        showRelativeChartData ? viewModel.relativeDeathsData.suffix(casesChartCount.numberOfDatapoints()) :
-        viewModel.rawDeathsData.suffix(casesChartCount.numberOfDatapoints())
+        showRelativeChartData ? viewModel.relativeDeathsData.suffix(casesChartCount.numberOfDatapoints) :
+        viewModel.rawDeathsData.suffix(casesChartCount.numberOfDatapoints)
     }
 
     private var sortButton: some View {

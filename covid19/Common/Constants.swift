@@ -31,19 +31,15 @@ enum ChartCount: String, CaseIterable, Identifiable {
     // swiftlint:disable:next identifier_name
     var id: String { self.rawValue }
 
-    func numberOfDatapoints() -> Int {
-        switch self {
-        case .oneMonth:
-            return 31
-        case .threeMonths:
-            return 91
-        case .sixMonths:
-            return 183
-        case .oneYear:
-            return 365
-        case .all:
-            return 1_000 // services return max of 1000 items
-        }
+    var numberOfDatapoints: Int {
+        let dataPoints: [ChartCount: Int] = [
+            .oneMonth: 31,
+            .threeMonths: 91,
+            .sixMonths: 183,
+            .oneYear: 365
+        ]
+        // services return max of 1000 items
+        return dataPoints[self] ?? 1_000
     }
 }
 
@@ -68,7 +64,6 @@ struct Constants {
         return url.replacingOccurrences(of: "[FILTER]", with: filter)
     }
 
-    static let appStoreStory = URL(string: "https://apps.apple.com/gb/story/id1532087825")!
     static let rNumberUK = URL(string: "https://www.gov.uk/guidance/the-r-number-in-the-uk")!
     static let sourceGovUK = URL(string: "https://coronavirus.data.gov.uk")!
 

@@ -13,7 +13,6 @@ class ViewModel: ObservableObject {
     @Published var lastUpdated: Date = Date.distantPast
     @Published var lastChecked: Date = Date.distantPast
     @Published var footerText = "Loading..."
-    private var error: String?
 
     @Published var dailyLatestCases = "-"
     @Published var dailyCasesChange = ""
@@ -31,8 +30,9 @@ class ViewModel: ObservableObject {
     @Published var rawDeathsData: [Double] = []
     @Published var relativeDeathsData: [Double] = []
 
-    var cancellable: Set<AnyCancellable> = Set()
-    var timer: Timer?
+    private var cancellable: Set<AnyCancellable> = Set()
+    private var timer: Timer?
+    private var error: String?
 
     func fetchData(_ location: Location, clearData: Bool) {
         error = nil
@@ -197,7 +197,7 @@ class ViewModel: ObservableObject {
         weeklyDeathsChange += ", \(deathsMinusOrPlus)\(deathsPercentageChange.rounded(toPlaces: 1))%)"
     }
 
-    @objc func updateFooterText() {
+    @objc private func updateFooterText() {
         if let error = error {
             footerText = error
             return
