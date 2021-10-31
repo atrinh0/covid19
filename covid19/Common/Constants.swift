@@ -72,9 +72,10 @@ struct Constants {
     static let aLongTimeAgo: TimeInterval = 60*60*24*120 // 120 days
     static let updateInterval: TimeInterval = 60*15 // 15 min
 
-    static let lastModifiedKey = "LastModified"
     static let lastModifiedHeaderFieldKey = "Last-Modified"
     static let lastModifiedDateFormat = "EEEE, dd LLL yyyy HH:mm:ss zzz"
+    static let lastModifiedKey = "LastModified"
+    static let lastNotificationKey = "LastNotification"
     static let backgroundFetchId = "com.atrinh.covid.fetch"
 
     static let casesColor: Color = .orange

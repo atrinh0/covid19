@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FC31B719272F05B300AC806E /* LocalNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC31B718272F05B300AC806E /* LocalNotifier.swift */; };
 		FC41008E2520EE0800F931CC /* covid19App.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41008D2520EE0800F931CC /* covid19App.swift */; };
 		FC4100902520EE0800F931CC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41008F2520EE0800F931CC /* ContentView.swift */; };
 		FC4100922520EE0900F931CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC4100912520EE0900F931CC /* Assets.xcassets */; };
@@ -56,6 +57,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FC31B718272F05B300AC806E /* LocalNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotifier.swift; sourceTree = "<group>"; };
 		FC41008A2520EE0800F931CC /* covid19.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = covid19.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC41008D2520EE0800F931CC /* covid19App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = covid19App.swift; sourceTree = "<group>"; };
 		FC41008F2520EE0800F931CC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				FC6DCF21252269F900D38990 /* Models.swift */,
 				FCA371812529D2C700CD24C3 /* Extensions.swift */,
 				FCA371862529D34D00CD24C3 /* Constants.swift */,
+				FC31B718272F05B300AC806E /* LocalNotifier.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				FCCACA6A25EAC52100C3E0FF /* RNumberView.swift in Sources */,
 				FCCACA7625EACADA00C3E0FF /* SourceView.swift in Sources */,
 				FC41009F2521083B00F931CC /* ViewModel.swift in Sources */,
+				FC31B719272F05B300AC806E /* LocalNotifier.swift in Sources */,
 				FC41008E2520EE0800F931CC /* covid19App.swift in Sources */,
 				FC6DCF22252269F900D38990 /* Models.swift in Sources */,
 				FCA371872529D34D00CD24C3 /* Constants.swift in Sources */,

@@ -53,7 +53,6 @@ class ViewModel: ObservableObject {
             .map { output in
                 if let urlReponse = output.response as? HTTPURLResponse,
                     let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
-                    UserDefaults.standard.setValue(lastModified, forKey: Constants.lastModifiedKey)
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = Constants.lastModifiedDateFormat
                     if let serverDate = dateFormatter.date(from: lastModified) {
