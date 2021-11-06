@@ -2,7 +2,7 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/iOS-14.0+-blue.svg" />
-    <img src="https://img.shields.io/badge/Xcode-12.0+-brightgreen.svg" />
+    <img src="https://img.shields.io/badge/Xcode-13.1+-brightgreen.svg" />
     <img src="https://img.shields.io/badge/Swift-5.3-orange.svg" />
     <img src="https://img.shields.io/badge/SwiftUI-2.0-red.svg" />
 </p>
@@ -12,15 +12,11 @@ This app was created with the intention of publishing to the AppStore.
 
 The primary purpose of this app is to share information with the UK public in the hopes that people will change their behavior to help us all control the spread of this virus.
 
-<img src="images/scroll.gif"/> <img src="images/countries.gif"/>
-
-<img src="images/widget.gif"/>
-
 ### 🏙 Screenshots
 
 #### App
 
-<img src="images/countries1.png" width="320"/> <img src="images/deaths1.png" width="320"/>
+<img src="images/graphs.png" width="320"/> <img src="images/countries.png" width="320"/>
 
 #### Widget
 
