@@ -14,9 +14,6 @@ enum Location: String, CaseIterable, Identifiable {
     case northernIreland = "Northern Ireland"
     case scotland = "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland"
     case wales = "🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales"
-
-    // Identifiable
-    // swiftlint:disable:next identifier_name
     var id: String { self.rawValue }
 }
 
@@ -26,9 +23,6 @@ enum ChartCount: String, CaseIterable, Identifiable {
     case sixMonths = "6M"
     case oneYear = "1Y"
     case all = "ALL"
-
-    // Identifiable
-    // swiftlint:disable:next identifier_name
     var id: String { self.rawValue }
 
     var numberOfDatapoints: Int {
