@@ -10,31 +10,38 @@ import SwiftUI
 import Charts
 
 struct Provider: TimelineProvider {
+    private let session = URLSession.shared
+    private let request: URLRequest = URLRequest(url: URL(string: Constants.url())!)
+
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), cases: 0, deaths: 0, casesData: [], deathsData: [])
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
-        URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
-            guard let data = data,
-                  let responseData = try? JSONDecoder().decode(ResponseData.self, from: data) else { return }
-            let entry = SimpleEntry(responseData: responseData, response: response)
-            completion(entry)
-        }.resume()
+        Task {
+            do {
+                let entry = try await simpleEntry()
+                completion(entry)
+            } catch { }
+        }
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-        URLSession.shared.dataTask(with: URL(string: Constants.url())!) { data, response, _ in
-            guard let data = data,
-                  let responseData = try? JSONDecoder().decode(ResponseData.self, from: data),
-                  let fifthteenMinutesFromNow = Calendar.current.date(byAdding: .minute, value: 15, to: Date()) else {
-                      return
-                  }
+        Task {
+            do {
+                let entry = try await simpleEntry()
+                let timeline = Timeline(entries: [entry],
+                                        policy: .after(Date(timeIntervalSinceNow: Constants.updateInterval)))
+                completion(timeline)
+            } catch { }
+        }
+    }
 
-            let entry = SimpleEntry(responseData: responseData, response: response)
-            let timeline = Timeline(entries: [entry], policy: .after(fifthteenMinutesFromNow))
-            completion(timeline)
-        }.resume()
+    private func simpleEntry() async throws -> SimpleEntry {
+        let (data, response) = try await session.data(for: request)
+        let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
+        let entry = SimpleEntry(responseData: responseData, response: response)
+        return entry
     }
 }
 

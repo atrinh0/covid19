@@ -13,7 +13,7 @@ struct ContentView: View {
     @Environment(\.openURL) var openURL
     @State private var locationSelection = Location.unitedKingdom
     @ObservedObject private var viewModel = ViewModel()
-    @State private var casesChartCount = ChartCount.all
+    @State private var casesChartCount = ChartCount.oneYear
     @State private var showRelativeChartData = false
 
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
@@ -130,7 +130,7 @@ struct ContentView: View {
     }
 
     private func reloadData() {
-        viewModel.fetchData(locationSelection, clearData: true)
+        viewModel.fetchData(locationSelection, shouldClearData: true)
         updateIfNeeded()
     }
 
@@ -142,7 +142,7 @@ struct ContentView: View {
         // check every 15 minutes
         let interval = abs(viewModel.lastChecked.timeIntervalSinceNow)
         if interval >= Constants.updateInterval {
-            viewModel.fetchData(locationSelection, clearData: false)
+            viewModel.fetchData(locationSelection, shouldClearData: false)
         }
     }
 

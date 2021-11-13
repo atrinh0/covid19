@@ -28,33 +28,36 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     private func handleAppRefreshTask(task: BGTask) {
-        guard let url = URL(string: Constants.url()) else { return }
+        defer {
+            scheduleBackgroundFetch()
+        }
 
         task.expirationHandler = {
             task.setTaskCompleted(success: false)
         }
 
-        URLSession.shared.dataTask(with: url) { data, response, _ in
-            guard let data = data else {
-                task.setTaskCompleted(success: false)
-                return
-            }
-            let previousLastModified = UserDefaults.standard.value(forKey: Constants.lastModifiedKey) as? String ?? ""
-            if let responseData = try? JSONDecoder().decode(ResponseData.self, from: data),
-               let urlReponse = response as? HTTPURLResponse,
-               let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
-                LocalNotifier.scheduleLocalNotification(response: responseData)
-                if previousLastModified == lastModified {
+        Task {
+            do {
+                let request = URLRequest(url: URL(string: Constants.url())!)
+                let (data, response) = try await URLSession.shared.data(for: request)
+                let prevLastModified = UserDefaults.standard.value(forKey: Constants.lastModifiedKey) as? String ?? ""
+                let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
+                if let urlReponse = response as? HTTPURLResponse,
+                   let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
+                    LocalNotifier.scheduleLocalNotification(response: responseData)
+                    if prevLastModified == lastModified {
+                        task.setTaskCompleted(success: true)
+                        return
+                    }
+                    WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
+                    UserDefaults.standard.setValue(lastModified, forKey: Constants.lastModifiedKey)
                     task.setTaskCompleted(success: true)
                     return
                 }
-                WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
-                UserDefaults.standard.setValue(lastModified, forKey: Constants.lastModifiedKey)
-                task.setTaskCompleted(success: true)
-            }
-        }.resume()
+            } catch { }
+        }
 
-        scheduleBackgroundFetch()
+        task.setTaskCompleted(success: false)
     }
 
     private func scheduleBackgroundFetch() {

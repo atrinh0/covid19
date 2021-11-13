@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class ViewModel: ObservableObject {
+@MainActor final class ViewModel: ObservableObject {
     @Published var data: [Info] = []
     @Published var lastUpdated: Date = Date.distantPast
     @Published var lastChecked: Date = Date.distantPast
@@ -30,52 +30,40 @@ class ViewModel: ObservableObject {
     @Published var rawDeathsData: [Double] = []
     @Published var relativeDeathsData: [Double] = []
 
-    private var cancellable: Set<AnyCancellable> = Set()
     private var timer: Timer?
     private var error: String?
 
-    func fetchData(_ location: Location, clearData: Bool) {
+    func fetchData(_ location: Location, shouldClearData: Bool) {
         error = nil
-
-        DispatchQueue.main.async {
-            self.lastChecked = .distantPast
-            if clearData {
-                self.clearData()
-            }
-            self.updateFooterText()
+        lastChecked = .distantPast
+        if shouldClearData {
+            clearData()
         }
+        updateFooterText()
 
         let urlString = Constants.url(location: location)
         print("\(urlString)")
         guard let url = URL(string: urlString) else { return }
 
-        URLSession.shared.dataTaskPublisher(for: url)
-            .map { output in
-                if let urlReponse = output.response as? HTTPURLResponse,
+        Task {
+            do {
+                let (data, response) = try await URLSession.shared.data(for: URLRequest(url: url))
+                if let urlReponse = response as? HTTPURLResponse,
                     let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = Constants.lastModifiedDateFormat
                     if let serverDate = dateFormatter.date(from: lastModified) {
-                        DispatchQueue.main.async {
-                            self.lastUpdated = serverDate
-                        }
+                        lastUpdated = serverDate
                     }
                 }
-                return output.data
+                let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
+                self.data = responseData.data
+                lastChecked = Date()
+            } catch {
+                self.error = error.localizedDescription
             }
-            .decode(type: ResponseData.self, decoder: JSONDecoder())
-            .sink { completion in
-                if case .failure(let error) = completion {
-                    self.error = error.localizedDescription
-                }
-            } receiveValue: { value in
-                DispatchQueue.main.async {
-                    self.data = value.data
-                    self.lastChecked = Date()
-                    self.updateData()
-                }
-            }
-            .store(in: &cancellable)
+            updateData()
+        }
 
         timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(updateFooterText),
