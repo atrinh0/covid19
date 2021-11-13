@@ -1,9 +1,9 @@
 <p align="center"><img src="images/IconPrettified.png" width="200"></p>
 
 <p align="center">
-    <img src="https://img.shields.io/badge/iOS-14.0+-blue.svg" />
+    <img src="https://img.shields.io/badge/iOS-15.0+-blue.svg" />
     <img src="https://img.shields.io/badge/Xcode-13.1+-brightgreen.svg" />
-    <img src="https://img.shields.io/badge/Swift-5.3-orange.svg" />
+    <img src="https://img.shields.io/badge/Swift-5.5-orange.svg" />
     <img src="https://img.shields.io/badge/SwiftUI-2.0-red.svg" />
 </p>
 
@@ -47,12 +47,12 @@ For more information: [Ensuring the Credibility of Health & Safety Information](
 - Widget showing latest daily cases and deaths
 - 🔄 Automatically reload data every 15 minutes (from within the app, and widget data)
 - 🔔 Fetch data every 15 minutes in the background (subject to iOS system rules for scheduling background tasks) and send a local notification upon detecting any changes
-- 📈 Chart timescale can be changed (All data, 6 months, 3 months, 1 month, 1 week)
+- 📈 Chart timescale can be changed (All data, 1 year, 6 months, 3 months, 1 month)
 - Change dataset for (🇬🇧 UK, 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England, Northern Ireland, 🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland, 🏴󠁧󠁢󠁷󠁬󠁳󠁿 Wales)
 
 ### 👨🏻‍⚖️ Disclaimer
 
-> I have decided to open the sourcecode for this app for the following reasons:
+> I have decided to open source this app for the following reasons:
 >
 > - Transparency in the hopes that it might be approved for the AppStore one day
 > - To share SwiftUI code with other iOS developers
