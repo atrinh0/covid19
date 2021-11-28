@@ -8,6 +8,8 @@
 import UIKit
 
 enum LocalNotifier {
+    private static var defaults = UserDefaults.standard
+
     static func scheduleLocalNotification(response: ResponseData) {
         let data = response.data
         guard let latestRecord = data.first else { return }
@@ -23,13 +25,13 @@ enum LocalNotifier {
         let contentBody = getContentBody(data: data)
 
         let notification = contentTitle + contentBody
-        let lastNotification = UserDefaults.standard.value(forKey: Constants.lastNotificationKey) as? String ?? ""
+        let lastNotification = defaults.value(forKey: Constants.lastNotificationKey) as? String ?? ""
 
         // prevent multiple duplicate notifications
         if notification == lastNotification {
             return
         }
-        UserDefaults.standard.setValue(notification, forKey: Constants.lastNotificationKey)
+        defaults.setValue(notification, forKey: Constants.lastNotificationKey)
 
         let content = UNMutableNotificationContent()
         content.title = contentTitle
@@ -76,10 +78,11 @@ enum LocalNotifier {
     }
 
     private static func addNotification(content: UNMutableNotificationContent) {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
+        let currentNotificationCenter = UNUserNotificationCenter.current()
+        currentNotificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request)
+        currentNotificationCenter.add(request)
     }
 }
