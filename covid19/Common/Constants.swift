@@ -37,7 +37,7 @@ enum ChartCount: String, CaseIterable, Identifiable {
     }
 }
 
-struct Constants {
+enum Constants {
     static func url(location: Location? = .unitedKingdom) -> String {
         // api url
         // swiftlint:disable:next line_length

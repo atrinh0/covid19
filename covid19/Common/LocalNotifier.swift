@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct LocalNotifier {
+enum LocalNotifier {
     static func scheduleLocalNotification(response: ResponseData) {
         let data = response.data
         guard let latestRecord = data.first else { return }

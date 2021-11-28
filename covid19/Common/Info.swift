@@ -1,5 +1,5 @@
 //
-//  Models.swift
+//  Info.swift
 //  covid19
 //
 //  Created by An Trinh on 28/9/20.
