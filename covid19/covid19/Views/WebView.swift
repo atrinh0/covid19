@@ -9,7 +9,7 @@ import SwiftUI
 import WebKit
 
 struct WebView: UIViewRepresentable {
-    let request: URLRequest
+    let url: URL?
     let reload: Bool
 
     func makeUIView(context: Context) -> WKWebView {
@@ -17,6 +17,7 @@ struct WebView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        uiView.load(request)
+        guard let url = url else { return }
+        uiView.load(URLRequest(url: url))
     }
 }

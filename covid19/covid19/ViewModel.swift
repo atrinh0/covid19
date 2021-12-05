@@ -160,10 +160,10 @@ import Combine
             return
         }
 
-        let fortnightCases = data.prefix(14).compactMap({ $0.cases }).reduce(0, +)
-        let weeklyCases = data.prefix(7).compactMap({ $0.cases }).reduce(0, +)
-        let fortnightDeaths = data.prefix(14).compactMap({ $0.deaths }).reduce(0, +)
-        let weeklyDeaths = data.prefix(7).compactMap({ $0.deaths }).reduce(0, +)
+        let fortnightCases = data.prefix(14).compactMap { $0.cases }.reduce(0, +)
+        let weeklyCases = data.prefix(7).compactMap { $0.cases }.reduce(0, +)
+        let fortnightDeaths = data.prefix(14).compactMap { $0.deaths }.reduce(0, +)
+        let weeklyDeaths = data.prefix(7).compactMap { $0.deaths }.reduce(0, +)
 
         let priorWeekCases = fortnightCases - weeklyCases
         let casesDifference = weeklyCases - priorWeekCases

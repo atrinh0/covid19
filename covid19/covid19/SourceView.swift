@@ -12,7 +12,7 @@ struct SourceView: View {
 
     var body: some View {
         NavigationView {
-            WebView(request: URLRequest(url: Constants.sourceGovUK), reload: reload)
+            WebView(url: Constants.sourceGovUK, reload: reload)
                 .navigationTitle(Text(Constants.sourceGovUKTitle))
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(trailing: Button {

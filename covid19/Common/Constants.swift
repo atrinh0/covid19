@@ -58,8 +58,8 @@ enum Constants {
         return url.replacingOccurrences(of: "[FILTER]", with: filter)
     }
 
-    static let rNumberUK = URL(string: "https://www.gov.uk/guidance/the-r-number-in-the-uk")!
-    static let sourceGovUK = URL(string: "https://coronavirus.data.gov.uk")!
+    static let rNumberUK = URL(string: "https://www.gov.uk/guidance/the-r-number-in-the-uk")
+    static let sourceGovUK = URL(string: "https://coronavirus.data.gov.uk")
 
     static let widgetName = "CasesWidget"
 

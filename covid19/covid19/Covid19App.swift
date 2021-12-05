@@ -32,13 +32,15 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             scheduleBackgroundFetch()
         }
 
+        guard let url = URL(string: Constants.url()) else { return }
+
         task.expirationHandler = {
             task.setTaskCompleted(success: false)
         }
 
         Task {
             do {
-                let request = URLRequest(url: URL(string: Constants.url())!)
+                let request = URLRequest(url: url)
                 let (data, response) = try await URLSession.shared.data(for: request)
                 let prevLastModified = UserDefaults.standard.value(forKey: Constants.lastModifiedKey) as? String ?? ""
                 let responseData = try JSONDecoder().decode(ResponseData.self, from: data)

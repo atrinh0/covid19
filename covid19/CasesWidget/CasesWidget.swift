@@ -11,7 +11,6 @@ import Charts
 
 struct Provider: TimelineProvider {
     private let session = URLSession.shared
-    private let request: URLRequest = URLRequest(url: URL(string: Constants.url())!)
 
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), cases: 0, deaths: 0, casesData: [], deathsData: [])
@@ -20,7 +19,7 @@ struct Provider: TimelineProvider {
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
         Task {
             do {
-                let entry = try await simpleEntry()
+                let entry = try await simpleEntry(in: context)
                 completion(entry)
             } catch { }
         }
@@ -29,7 +28,7 @@ struct Provider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
         Task {
             do {
-                let entry = try await simpleEntry()
+                let entry = try await simpleEntry(in: context)
                 let timeline = Timeline(entries: [entry],
                                         policy: .after(Date(timeIntervalSinceNow: Constants.updateInterval)))
                 completion(timeline)
@@ -37,7 +36,11 @@ struct Provider: TimelineProvider {
         }
     }
 
-    private func simpleEntry() async throws -> SimpleEntry {
+    private func simpleEntry(in context: Context) async throws -> SimpleEntry {
+        guard let url = URL(string: Constants.url()) else {
+            return placeholder(in: context)
+        }
+        let request = URLRequest(url: url)
         let (data, response) = try await session.data(for: request)
         let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
         let entry = SimpleEntry(responseData: responseData, response: response)

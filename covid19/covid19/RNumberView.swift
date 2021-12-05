@@ -12,7 +12,7 @@ struct RNumberView: View {
 
     var body: some View {
         NavigationView {
-            WebView(request: URLRequest(url: Constants.rNumberUK), reload: reload)
+            WebView(url: Constants.rNumberUK, reload: reload)
                 .navigationTitle(Text(Constants.rNumberUKTitle))
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(trailing: Button {
