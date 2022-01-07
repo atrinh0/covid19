@@ -8,7 +8,8 @@
 import Foundation
 import Combine
 
-@MainActor final class ViewModel: ObservableObject {
+@MainActor
+final class ViewModel: ObservableObject {
     @Published var data: [Info] = []
     @Published var lastUpdated: Date = Date.distantPast
     @Published var lastChecked: Date = Date.distantPast

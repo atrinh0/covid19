@@ -11,9 +11,9 @@ import WidgetKit
 
 struct ContentView: View {
     @Environment(\.openURL) var openURL
-    @State private var locationSelection = Location.unitedKingdom
+    @State private var locationSelection: Location = .unitedKingdom
     @ObservedObject private var viewModel = ViewModel()
-    @State private var casesChartCount = ChartCount.oneYear
+    @State private var casesChartCount: ChartCount = .oneYear
     @State private var showRelativeChartData = false
 
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
@@ -22,111 +22,121 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text(viewModel.footerText)
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                    ZStack {
-                        Color.gray.opacity(0.04)
-                        Chart(data: viewModel.casesData.suffix(casesChartCount.numberOfDatapoints))
-                            .chartStyle(
-                                LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
-                            )
-                            .frame(height: chartHeight)
-                        Chart(data: deathsData)
-                            .chartStyle(
-                                LineChartStyle(.line, lineColor: Constants.deathsColor, lineWidth: 2)
-                            )
-                            .frame(height: chartHeight)
-                    }
-                    Picker(selection: $casesChartCount) {
-                        ForEach(ChartCount.allCases) {
-                            Text($0.rawValue)
-                                .tag($0)
-                        }
-                    } label: { }
-                    .pickerStyle(.segmented)
-                    Picker(selection: $showRelativeChartData) {
-                        Text("Relative")
-                            .tag(true)
-                        Text("Emphasised")
-                            .tag(false)
-                    } label: { }
-                    .pickerStyle(.segmented)
-                    .padding(.bottom, 5)
-                    VStack(alignment: .leading) {
-                        Text(viewModel.dailyLatestCases)
-                            .font(Font.title2.bold())
-                            .foregroundColor(Constants.casesColor) +
-                        Text(viewModel.dailyCasesChange)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.gray)
-                        Text("new cases on \(viewModel.latestDate)")
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading) {
-                        Text(viewModel.weeklyLatestCases)
-                            .font(Font.title2.bold())
-                            .foregroundColor(Constants.casesColor) +
-                        Text(viewModel.weeklyCasesChange)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.gray)
-                        Text("new cases in the last 7 days")
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading) {
-                        Text(viewModel.totalCases)
-                            .font(Font.title2.bold())
-                            .foregroundColor(Constants.casesColor) +
-                        Text(" total cases")
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading) {
-                        Text(viewModel.dailyLatestDeaths)
-                            .font(Font.title2.bold())
-                            .foregroundColor(Constants.deathsColor) +
-                        Text(viewModel.dailyDeathsChange)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.gray)
-                        Text("new deaths on \(viewModel.latestDate)")
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading) {
-                        Text(viewModel.weeklyLatestDeaths)
-                            .font(Font.title2.bold())
-                            .foregroundColor(Constants.deathsColor) +
-                        Text(viewModel.weeklyDeathsChange)
-                            .font(Font.title2.bold())
-                            .foregroundColor(.gray)
-                        Text("new deaths in the last 7 days")
-                            .foregroundColor(.gray)
-                    }
-                    VStack(alignment: .leading) {
-                        Text(viewModel.totalDeaths)
-                            .font(Font.title2.bold())
-                            .foregroundColor(Constants.deathsColor) +
-                        Text(" total deaths")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding(.vertical)
+                chartAndDataView
             }
             .navigationTitle(Text(locationSelection.rawValue))
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: sortButton)
+            .refreshable {
+                reloadDataAndWidget()
+            }
         }
-        .onAppear {
-            reloadData()
-            WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
+        .task {
+            reloadDataAndWidget()
         }
         .onReceive(timer) { _ in
             updateIfNeeded()
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-            reloadData()
-            WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
+            reloadDataAndWidget()
         }
         .navigationViewStyle(.stack)
+    }
+
+    private var chartAndDataView: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(viewModel.footerText)
+                .font(.caption)
+                .foregroundColor(.gray)
+            ZStack {
+                Color.gray.opacity(0.04)
+                Chart(data: viewModel.casesData.suffix(casesChartCount.numberOfDatapoints))
+                    .chartStyle(
+                        LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
+                    )
+                    .frame(height: chartHeight)
+                Chart(data: deathsData)
+                    .chartStyle(
+                        LineChartStyle(.line, lineColor: Constants.deathsColor, lineWidth: 2)
+                    )
+                    .frame(height: chartHeight)
+            }
+            Picker(selection: $casesChartCount) {
+                ForEach(ChartCount.allCases) {
+                    Text($0.rawValue)
+                        .tag($0)
+                }
+            } label: { }
+            .pickerStyle(.segmented)
+            Picker(selection: $showRelativeChartData) {
+                Text("Relative")
+                    .tag(true)
+                Text("Emphasised")
+                    .tag(false)
+            } label: { }
+            .pickerStyle(.segmented)
+            .padding(.bottom, 5)
+            VStack(alignment: .leading) {
+                Text(viewModel.dailyLatestCases)
+                    .font(Font.title2.bold())
+                    .foregroundColor(Constants.casesColor) +
+                Text(viewModel.dailyCasesChange)
+                    .font(Font.title2.bold())
+                    .foregroundColor(.gray)
+                Text("new cases on \(viewModel.latestDate)")
+                    .foregroundColor(.gray)
+            }
+            VStack(alignment: .leading) {
+                Text(viewModel.weeklyLatestCases)
+                    .font(Font.title2.bold())
+                    .foregroundColor(Constants.casesColor) +
+                Text(viewModel.weeklyCasesChange)
+                    .font(Font.title2.bold())
+                    .foregroundColor(.gray)
+                Text("new cases in the last 7 days")
+                    .foregroundColor(.gray)
+            }
+            VStack(alignment: .leading) {
+                Text(viewModel.totalCases)
+                    .font(Font.title2.bold())
+                    .foregroundColor(Constants.casesColor) +
+                Text(" total cases")
+                    .foregroundColor(.gray)
+            }
+            VStack(alignment: .leading) {
+                Text(viewModel.dailyLatestDeaths)
+                    .font(Font.title2.bold())
+                    .foregroundColor(Constants.deathsColor) +
+                Text(viewModel.dailyDeathsChange)
+                    .font(Font.title2.bold())
+                    .foregroundColor(.gray)
+                Text("new deaths on \(viewModel.latestDate)")
+                    .foregroundColor(.gray)
+            }
+            VStack(alignment: .leading) {
+                Text(viewModel.weeklyLatestDeaths)
+                    .font(Font.title2.bold())
+                    .foregroundColor(Constants.deathsColor) +
+                Text(viewModel.weeklyDeathsChange)
+                    .font(Font.title2.bold())
+                    .foregroundColor(.gray)
+                Text("new deaths in the last 7 days")
+                    .foregroundColor(.gray)
+            }
+            VStack(alignment: .leading) {
+                Text(viewModel.totalDeaths)
+                    .font(Font.title2.bold())
+                    .foregroundColor(Constants.deathsColor) +
+                Text(" total deaths")
+                    .foregroundColor(.gray)
+            }
+        }
+        .padding(.vertical)
+    }
+
+    private func reloadDataAndWidget() {
+        reloadData()
+        WidgetCenter.shared.reloadTimelines(ofKind: Constants.widgetName)
     }
 
     private func reloadData() {
