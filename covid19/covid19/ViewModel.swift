@@ -10,10 +10,11 @@ import Foundation
 @MainActor
 final class ViewModel: ObservableObject {
     @Published var data: [Info] = []
-    @Published var lastUpdated: Date = Date.distantPast
-    @Published var lastChecked: Date = Date.distantPast
+    @Published var lastUpdated = Date.distantPast
+    @Published var lastChecked = Date.distantPast
     @Published var footerText = "Loading..."
 
+    @Published var latestDataPointDate = Date.distantPast
     @Published var weeklyLatestCases = "-"
     @Published var weeklyCasesChange = ""
     @Published var totalCases = "-"
@@ -100,6 +101,7 @@ final class ViewModel: ObservableObject {
 
     private func updateData() {
         updateFooterText()
+
         if let latestRecord = data.first {
             totalCases = latestRecord.totalCases?.formattedWithSeparator ?? "0"
             totalDeaths = latestRecord.totalDeaths?.formattedWithSeparator ?? "0"

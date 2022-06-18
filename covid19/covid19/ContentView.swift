@@ -54,7 +54,7 @@ struct ContentView: View {
 //                    .chartStyle(
 //                        LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
 //                    )
-//                    .frame(height: chartHeight)
+                    .frame(height: chartHeight)
 //                Chart(data: deathsData)
 //                    .chartStyle(
 //                        LineChartStyle(.line, lineColor: Constants.deathsColor, lineWidth: 2)
