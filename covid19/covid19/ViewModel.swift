@@ -14,13 +14,9 @@ final class ViewModel: ObservableObject {
     @Published var lastChecked: Date = Date.distantPast
     @Published var footerText = "Loading..."
 
-    @Published var dailyLatestCases = "-"
-    @Published var dailyCasesChange = ""
     @Published var weeklyLatestCases = "-"
     @Published var weeklyCasesChange = ""
     @Published var totalCases = "-"
-    @Published var dailyLatestDeaths = "-"
-    @Published var dailyDeathsChange = ""
     @Published var weeklyLatestDeaths = "-"
     @Published var weeklyDeathsChange = ""
     @Published var totalDeaths = "-"
@@ -57,7 +53,7 @@ final class ViewModel: ObservableObject {
                     }
                 }
                 let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
-                self.data = responseData.data
+                self.data = responseData.data.map { Info(response: $0) }
                 lastChecked = Date()
             } catch {
                 self.error = error.localizedDescription
@@ -83,13 +79,9 @@ final class ViewModel: ObservableObject {
     private func clearData() {
         data = []
         lastUpdated = .distantPast
-        dailyLatestCases = "-"
-        dailyCasesChange = ""
         weeklyLatestCases = "-"
         weeklyCasesChange = ""
         totalCases = "-"
-        dailyLatestDeaths = "-"
-        dailyDeathsChange = ""
         weeklyLatestDeaths = "-"
         weeklyDeathsChange = ""
         totalDeaths = "-"
@@ -109,38 +101,14 @@ final class ViewModel: ObservableObject {
     private func updateData() {
         updateFooterText()
         if let latestRecord = data.first {
-            if let cases = latestRecord.cases, cases > 0 {
-                dailyLatestCases = "\(cases.formattedWithSeparator)"
-            } else {
-                dailyLatestCases = "0"
-            }
-            if let deaths = latestRecord.deaths, deaths > 0 {
-                dailyLatestDeaths = "\(deaths.formattedWithSeparator)"
-            } else {
-                dailyLatestDeaths = "0"
-            }
-            totalCases = latestRecord.cumCases?.formattedWithSeparator ?? "0"
-            totalDeaths = latestRecord.cumDeaths?.formattedWithSeparator ?? "0"
+            totalCases = latestRecord.totalCases?.formattedWithSeparator ?? "0"
+            totalDeaths = latestRecord.totalDeaths?.formattedWithSeparator ?? "0"
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             if let date = dateFormatter.date(from: latestRecord.date) {
                 dateFormatter.dateFormat = "EEEE dd MMMM"
                 latestDate = dateFormatter.string(from: date)
-            }
-
-            if data.count > 1 {
-                let secondRecord = data[1]
-                if let cases = latestRecord.cases, let dayBeforeCases = secondRecord.cases {
-                    let difference = cases - dayBeforeCases
-                    let minusOrPlus = difference < 0 ? "-" : "+"
-                    dailyCasesChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
-                }
-                if let deaths = latestRecord.deaths, let dayBeforeDeaths = secondRecord.deaths {
-                    let difference = deaths - dayBeforeDeaths
-                    let minusOrPlus = difference < 0 ? "-" : "+"
-                    dailyDeathsChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
-                }
             }
         }
 

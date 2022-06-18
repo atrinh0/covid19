@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,13 +13,11 @@
 		FC4100922520EE0900F931CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC4100912520EE0900F931CC /* Assets.xcassets */; };
 		FC4100952520EE0900F931CC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC4100942520EE0900F931CC /* Preview Assets.xcassets */; };
 		FC41009F2521083B00F931CC /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41009E2521083B00F931CC /* ViewModel.swift */; };
-		FC4100A925221F9300F931CC /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = FC4100A825221F9300F931CC /* Charts */; };
 		FC6DCF0A25224E7200D38990 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC6DCF0925224E7200D38990 /* WidgetKit.framework */; };
 		FC6DCF0C25224E7200D38990 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC6DCF0B25224E7200D38990 /* SwiftUI.framework */; };
 		FC6DCF0F25224E7200D38990 /* CasesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF0E25224E7200D38990 /* CasesWidget.swift */; };
 		FC6DCF1125224E7500D38990 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC6DCF1025224E7500D38990 /* Assets.xcassets */; };
 		FC6DCF1525224E7500D38990 /* CasesWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FC6DCF0725224E7200D38990 /* CasesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		FC6DCF1D25224EA400D38990 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = FC6DCF1C25224EA400D38990 /* Charts */; };
 		FC6DCF22252269F900D38990 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF21252269F900D38990 /* Info.swift */; };
 		FC6DCF23252269F900D38990 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF21252269F900D38990 /* Info.swift */; };
 		FC6DCF2D2522816500D38990 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC6DCF2C2522816500D38990 /* Launch Screen.storyboard */; };
@@ -88,7 +86,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC4100A925221F9300F931CC /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,7 +94,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC6DCF0C25224E7200D38990 /* SwiftUI.framework in Frameworks */,
-				FC6DCF1D25224EA400D38990 /* Charts in Frameworks */,
 				FC6DCF0A25224E7200D38990 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -150,6 +146,14 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		FC602025285E2B1B0089DBDC /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FC6DCF21252269F900D38990 /* Info.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		FC6DCF0825224E7200D38990 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -172,8 +176,8 @@
 		FC6DCF20252269E500D38990 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				FC602025285E2B1B0089DBDC /* Models */,
 				FCBFDCAE2753FF6100AF2C5D /* Extensions */,
-				FC6DCF21252269F900D38990 /* Info.swift */,
 				FCA371862529D34D00CD24C3 /* Constants.swift */,
 				FC31B718272F05B300AC806E /* LocalNotifier.swift */,
 			);
@@ -217,7 +221,6 @@
 			);
 			name = covid19;
 			packageProductDependencies = (
-				FC4100A825221F9300F931CC /* Charts */,
 			);
 			productName = covid19;
 			productReference = FC41008A2520EE0800F931CC /* covid19.app */;
@@ -237,7 +240,6 @@
 			);
 			name = CasesWidgetExtension;
 			packageProductDependencies = (
-				FC6DCF1C25224EA400D38990 /* Charts */,
 			);
 			productName = CasesWidgetExtension;
 			productReference = FC6DCF0725224E7200D38990 /* CasesWidgetExtension.appex */;
@@ -270,7 +272,6 @@
 			);
 			mainGroup = FC4100812520EE0800F931CC;
 			packageReferences = (
-				FC4100A725221F9300F931CC /* XCRemoteSwiftPackageReference "swiftui-charts" */,
 			);
 			productRefGroup = FC41008B2520EE0800F931CC /* Products */;
 			projectDirPath = "";
@@ -417,7 +418,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -472,7 +473,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -494,7 +495,7 @@
 				DEVELOPMENT_TEAM = 6DRH5697SN;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = covid19/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -520,7 +521,7 @@
 				DEVELOPMENT_TEAM = 6DRH5697SN;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = covid19/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -543,7 +544,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6DRH5697SN;
 				INFOPLIST_FILE = CasesWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -568,7 +569,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6DRH5697SN;
 				INFOPLIST_FILE = CasesWidget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -615,30 +616,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		FC4100A725221F9300F931CC /* XCRemoteSwiftPackageReference "swiftui-charts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/swift-extensions/swiftui-charts";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		FC4100A825221F9300F931CC /* Charts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FC4100A725221F9300F931CC /* XCRemoteSwiftPackageReference "swiftui-charts" */;
-			productName = Charts;
-		};
-		FC6DCF1C25224EA400D38990 /* Charts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FC4100A725221F9300F931CC /* XCRemoteSwiftPackageReference "swiftui-charts" */;
-			productName = Charts;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FC4100822520EE0800F931CC /* Project object */;
 }

@@ -43,7 +43,8 @@ struct Provider: TimelineProvider {
         let request = URLRequest(url: url)
         let (data, response) = try await session.data(for: request)
         let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
-        let entry = SimpleEntry(responseData: responseData, response: response)
+        let infoArray = responseData.data.map { Info(response: $0) }
+        let entry = SimpleEntry(infoArray: infoArray, response: response)
         return entry
     }
 }
@@ -65,9 +66,9 @@ struct SimpleEntry: TimelineEntry {
         self.lastUpdated = ""
     }
 
-    init(date: Date? = Date(), responseData: ResponseData, response: URLResponse?) {
+    init(date: Date? = Date(), infoArray: [Info], response: URLResponse?) {
         self.date = date ?? Date()
-        if let firstRecord = responseData.data.first, let cases = firstRecord.cases, let deaths = firstRecord.deaths {
+        if let firstRecord = infoArray.first, let cases = firstRecord.cases, let deaths = firstRecord.deaths {
             self.cases = cases
             self.deaths = deaths
         } else {
@@ -75,8 +76,8 @@ struct SimpleEntry: TimelineEntry {
             self.deaths = 0
         }
 
-        let casesArray = responseData.data.map { Double($0.cases ?? 0) }
-        let deathsArray = responseData.data.map { Double($0.deaths ?? 0) }
+        let casesArray = infoArray.map { Double($0.cases ?? 0) }
+        let deathsArray = infoArray.map { Double($0.deaths ?? 0) }
         let maxCasesScalingValue = (casesArray.max() ?? 1.0) * 1.05
         let maxDeathsScalingValue = (deathsArray.max() ?? 1.0) * 1.05 * 2
         self.casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
@@ -121,14 +122,14 @@ struct WidgetView: View {
                     .foregroundColor(.primary)
                     .opacity(0.2)
                     .padding(.horizontal, 7)
-                Chart(data: entry.deathsData.suffix(isWide ? 183 : 91))
-                    .chartStyle(
-                        LineChartStyle(.line, lineColor: Constants.deathsColor, lineWidth: 2)
-                    )
-                Chart(data: entry.casesData.suffix(isWide ? 183 : 91))
-                    .chartStyle(
-                        LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
-                    )
+//                Chart(data: entry.deathsData.suffix(isWide ? 183 : 91))
+//                    .chartStyle(
+//                        LineChartStyle(.line, lineColor: Constants.deathsColor, lineWidth: 2)
+//                    )
+//                Chart(data: entry.casesData.suffix(isWide ? 183 : 91))
+//                    .chartStyle(
+//                        LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
+//                    )
             }
             .padding(.horizontal, -7)
             if isWide {

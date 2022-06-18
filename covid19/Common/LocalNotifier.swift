@@ -10,9 +10,8 @@ import UIKit
 enum LocalNotifier {
     private static var defaults = UserDefaults.standard
 
-    static func scheduleLocalNotification(response: ResponseData) {
-        let data = response.data
-        guard let latestRecord = data.first else { return }
+    static func scheduleLocalNotification(infoArray: [Info]) {
+        guard let latestRecord = infoArray.first else { return }
 
         var contentTitle = ""
         let dateFormatter = DateFormatter()
@@ -22,7 +21,7 @@ enum LocalNotifier {
             contentTitle = "Latest update for \(dateFormatter.string(from: date))"
         }
 
-        let contentBody = getContentBody(data: data)
+        let contentBody = getContentBody(infoArray: infoArray)
 
         let notification = contentTitle + contentBody
         let lastNotification = defaults.value(forKey: Constants.lastNotificationKey) as? String ?? ""
@@ -40,8 +39,8 @@ enum LocalNotifier {
         addNotification(content: content)
     }
 
-    private static func getContentBody(data: [Info]) -> String {
-        guard let latestRecord = data.first else { return "" }
+    private static func getContentBody(infoArray: [Info]) -> String {
+        guard let latestRecord = infoArray.first else { return "" }
 
         var latestCases = "0"
         var latestDeaths = "0"
@@ -52,13 +51,13 @@ enum LocalNotifier {
             latestDeaths = deaths.formattedWithSeparator
         }
 
-        let totalCases = latestRecord.cumCases?.formattedWithSeparator ?? "0"
-        let totalDeaths = latestRecord.cumDeaths?.formattedWithSeparator ?? "0"
+        let totalCases = latestRecord.totalCases?.formattedWithSeparator ?? "0"
+        let totalDeaths = latestRecord.totalDeaths?.formattedWithSeparator ?? "0"
 
         var casesChange = ""
         var deathsChange = ""
-        if data.count > 1 {
-            let secondRecord = data[1]
+        if infoArray.count > 1 {
+            let secondRecord = infoArray[1]
             if let cases = latestRecord.cases, let dayBeforeCases = secondRecord.cases {
                 let difference = cases - dayBeforeCases
                 let minusOrPlus = difference < 0 ? "-" : "+"

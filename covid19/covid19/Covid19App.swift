@@ -44,9 +44,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 let (data, response) = try await URLSession.shared.data(for: request)
                 let prevLastModified = UserDefaults.standard.value(forKey: Constants.lastModifiedKey) as? String ?? ""
                 let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
+                let infoArray = responseData.data.map { Info(response: $0) }
                 if let urlReponse = response as? HTTPURLResponse,
                    let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
-                    LocalNotifier.scheduleLocalNotification(response: responseData)
+                    LocalNotifier.scheduleLocalNotification(infoArray: infoArray)
                     if prevLastModified == lastModified {
                         task.setTaskCompleted(success: true)
                         return
