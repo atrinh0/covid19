@@ -111,6 +111,7 @@ final class ViewModel: ObservableObject {
             if let date = dateFormatter.date(from: latestRecord.date) {
                 dateFormatter.dateFormat = "EEEE dd MMMM"
                 latestDate = dateFormatter.string(from: date)
+                latestDataPointDate = date
             }
         }
 

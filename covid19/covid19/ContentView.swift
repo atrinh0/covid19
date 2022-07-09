@@ -83,8 +83,11 @@ struct ContentView: View {
                 Text(viewModel.weeklyCasesChange)
                     .font(Font.title2.bold())
                     .foregroundColor(.gray)
-                Text("new cases in the last 7 days")
-                    .foregroundColor(.gray)
+                Group {
+                    Text("new weekly cases until ") +
+                    Text(viewModel.latestDataPointDate, style: .date)
+                }
+                .foregroundColor(.gray)
             }
             VStack(alignment: .leading) {
                 Text(viewModel.totalCases)
@@ -100,8 +103,11 @@ struct ContentView: View {
                 Text(viewModel.weeklyDeathsChange)
                     .font(Font.title2.bold())
                     .foregroundColor(.gray)
-                Text("new deaths in the last 7 days")
-                    .foregroundColor(.gray)
+                Group {
+                    Text("new weekly deaths until ") +
+                    Text(viewModel.latestDataPointDate, style: .date)
+                }
+                .foregroundColor(.gray)
             }
             VStack(alignment: .leading) {
                 Text(viewModel.totalDeaths)
