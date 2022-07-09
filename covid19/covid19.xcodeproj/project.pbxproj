@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,7 +17,7 @@
 		FC6DCF0C25224E7200D38990 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC6DCF0B25224E7200D38990 /* SwiftUI.framework */; };
 		FC6DCF0F25224E7200D38990 /* CasesWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF0E25224E7200D38990 /* CasesWidget.swift */; };
 		FC6DCF1125224E7500D38990 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FC6DCF1025224E7500D38990 /* Assets.xcassets */; };
-		FC6DCF1525224E7500D38990 /* CasesWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = FC6DCF0725224E7200D38990 /* CasesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		FC6DCF1525224E7500D38990 /* CasesWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC6DCF0725224E7200D38990 /* CasesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FC6DCF22252269F900D38990 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF21252269F900D38990 /* Info.swift */; };
 		FC6DCF23252269F900D38990 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6DCF21252269F900D38990 /* Info.swift */; };
 		FC6DCF2D2522816500D38990 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FC6DCF2C2522816500D38990 /* Launch Screen.storyboard */; };
@@ -43,15 +43,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		FC6DCF1625224E7500D38990 /* Embed App Extensions */ = {
+		FC6DCF1625224E7500D38990 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				FC6DCF1525224E7500D38990 /* CasesWidgetExtension.appex in Embed App Extensions */,
+				FC6DCF1525224E7500D38990 /* CasesWidgetExtension.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -212,7 +212,7 @@
 				FC4100872520EE0800F931CC /* Frameworks */,
 				FC4100882520EE0800F931CC /* Resources */,
 				FC002F9A26B5B1DC009EA732 /* Run SwiftLint */,
-				FC6DCF1625224E7500D38990 /* Embed App Extensions */,
+				FC6DCF1625224E7500D38990 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -252,7 +252,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1200;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1400;
 				TargetAttributes = {
 					FC4100892520EE0800F931CC = {
 						CreatedOnToolsVersion = 12.0;
@@ -307,6 +307,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		FC002F9A26B5B1DC009EA732 /* Run SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
