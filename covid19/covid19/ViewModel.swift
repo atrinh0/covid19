@@ -23,10 +23,6 @@ final class ViewModel: ObservableObject {
     @Published var totalDeaths = "-"
     @Published var latestDate = "-"
 
-    @Published var casesData: [Double] = []
-    @Published var rawDeathsData: [Double] = []
-    @Published var relativeDeathsData: [Double] = []
-
     private var timer: Timer?
     private var error: String?
 
@@ -116,14 +112,6 @@ final class ViewModel: ObservableObject {
         }
 
         calculateWeeklyChange()
-
-        let casesArray = data.map { Double($0.cases ?? 0) }
-        let deathsArray = data.map { Double($0.deaths ?? 0) }
-        let maxCasesScalingValue = (casesArray.max() ?? 1.0) * 1.05
-        let maxDeathsScalingValue = (deathsArray.max() ?? 1.0) * 1.05
-        casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
-        rawDeathsData = deathsArray.map { $0/(maxDeathsScalingValue * 1.5)}.reversed()
-        relativeDeathsData = deathsArray.map { $0/maxCasesScalingValue }.reversed()
     }
 
     private func calculateWeeklyChange() {

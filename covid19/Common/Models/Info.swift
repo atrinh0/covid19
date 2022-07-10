@@ -5,7 +5,7 @@
 //  Created by An Trinh on 28/9/20.
 //
 
-struct Info {
+struct Info: Hashable {
     let date: String
     let cases: Int?
     let totalCases: Int?

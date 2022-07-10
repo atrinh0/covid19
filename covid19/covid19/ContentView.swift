@@ -50,16 +50,21 @@ struct ContentView: View {
                 .foregroundColor(.gray)
             ZStack {
                 Color.gray.opacity(0.04)
-//                Chart(data: viewModel.casesData.suffix(casesChartCount.numberOfDatapoints))
-//                    .chartStyle(
-//                        LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
-//                    )
-                    .frame(height: chartHeight)
-//                Chart(data: deathsData)
-//                    .chartStyle(
-//                        LineChartStyle(.line, lineColor: Constants.deathsColor, lineWidth: 2)
-//                    )
-//                    .frame(height: chartHeight)
+                Chart(data, id: \.self) {
+                    LineMark(
+                        x: .value("Date", $0.date),
+                        y: .value("Cases", $0.cases ?? 0),
+                        series: .value("Type", "Cases")
+                    )
+                    .foregroundStyle(Constants.casesColor)
+                    LineMark(
+                        x: .value("Date", $0.date),
+                        y: .value("Deaths", $0.deaths ?? 0),
+                        series: .value("Type", "Deaths")
+                    )
+                    .foregroundStyle(Constants.deathsColor)
+                }
+                .frame(height: chartHeight)
             }
             Picker(selection: $casesChartCount) {
                 ForEach(ChartCount.allCases) {
@@ -142,9 +147,9 @@ struct ContentView: View {
         }
     }
 
-    private var deathsData: [Double] {
-        showRelativeChartData ? viewModel.relativeDeathsData.suffix(casesChartCount.numberOfDatapoints) :
-        viewModel.rawDeathsData.suffix(casesChartCount.numberOfDatapoints)
+    private var data: [Info] {
+        showRelativeChartData ? viewModel.data.suffix(casesChartCount.numberOfDatapoints) :
+        viewModel.data.suffix(casesChartCount.numberOfDatapoints)
     }
 
     private var sortButton: some View {
