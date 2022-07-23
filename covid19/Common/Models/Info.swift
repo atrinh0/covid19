@@ -14,10 +14,10 @@ struct Info: Hashable {
 
     init(response: ResponseInfo) {
         self.date = response.date
-        self.cases = response.newCasesByPublishDate
-        self.totalCases = response.cumCasesByPublishDate
-        self.deaths = response.newDeaths28DaysByPublishDate
-        self.totalDeaths = response.cumDeaths28DaysByPublishDate
+        self.cases = response.newCasesBySpecimenDate
+        self.totalCases = response.cumCasesBySpecimenDate
+        self.deaths = response.newDeaths28DaysByDeathDate
+        self.totalDeaths = response.cumDeaths28DaysByDeathDate
     }
 }
 
@@ -29,8 +29,8 @@ struct ResponseData: Decodable {
 
 struct ResponseInfo: Decodable {
     let date: String
-    let newCasesByPublishDate: Int?
-    let cumCasesByPublishDate: Int?
-    let newDeaths28DaysByPublishDate: Int?
-    let cumDeaths28DaysByPublishDate: Int?
+    let newCasesBySpecimenDate: Int?
+    let cumCasesBySpecimenDate: Int?
+    let newDeaths28DaysByDeathDate: Int?
+    let cumDeaths28DaysByDeathDate: Int?
 }

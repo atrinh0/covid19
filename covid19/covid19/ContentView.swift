@@ -115,7 +115,6 @@ struct ContentView: View {
                     .foregroundColor(.secondary) +
                 Text(viewModel.latestDataPointDate, style: .date)
                     .foregroundColor(.secondary)
-                
             }
         }
         .padding()
