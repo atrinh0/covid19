@@ -14,14 +14,13 @@ struct ContentView: View {
     @State private var locationSelection: Location = .england
     @ObservedObject private var viewModel = ViewModel()
     @State private var casesChartCount: ChartCount = .oneYear
-    @State private var showRelativeChartData = false
 
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
     private let chartHeight: CGFloat = 200
 
     var body: some View {
         NavigationView {
-            List {
+            ScrollView {
                 chartAndDataView
             }
             .navigationTitle(Text(locationSelection.rawValue))
@@ -47,25 +46,7 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text(viewModel.footerText)
                 .font(.caption)
-                .foregroundColor(.gray)
-            ZStack {
-                Color.gray.opacity(0.04)
-                Chart(data, id: \.self) {
-                    LineMark(
-                        x: .value("Date", $0.date),
-                        y: .value("Cases", $0.cases ?? 0),
-                        series: .value("Type", "Cases")
-                    )
-                    .foregroundStyle(Constants.casesColor)
-                    LineMark(
-                        x: .value("Date", $0.date),
-                        y: .value("Deaths", $0.deaths ?? 0),
-                        series: .value("Type", "Deaths")
-                    )
-                    .foregroundStyle(Constants.deathsColor)
-                }
-                .frame(height: chartHeight)
-            }
+                .foregroundColor(.secondary)
             Picker(selection: $casesChartCount) {
                 ForEach(ChartCount.allCases) {
                     Text($0.rawValue)
@@ -73,56 +54,66 @@ struct ContentView: View {
                 }
             } label: { }
             .pickerStyle(.segmented)
-            Picker(selection: $showRelativeChartData) {
-                Text("Relative")
-                    .tag(true)
-                Text("Emphasised")
-                    .tag(false)
-            } label: { }
-            .pickerStyle(.segmented)
-            .padding(.bottom, 5)
+            Chart(data, id: \.self) {
+                LineMark(
+                    x: .value("Date", $0.date.toDate() ?? Date()),
+                    y: .value("Cases", $0.cases ?? 0),
+                    series: .value("Type", "Cases")
+                )
+                .foregroundStyle(Constants.casesColor)
+            }
+            .frame(height: chartHeight)
             VStack(alignment: .leading) {
                 Text(viewModel.weeklyLatestCases)
                     .font(Font.title2.bold())
                     .foregroundColor(Constants.casesColor) +
                 Text(viewModel.weeklyCasesChange)
                     .font(Font.title2.bold())
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                 Group {
                     Text("new weekly cases until ") +
                     Text(viewModel.latestDataPointDate, style: .date)
                 }
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
             }
             VStack(alignment: .leading) {
                 Text(viewModel.totalCases)
                     .font(Font.title2.bold())
                     .foregroundColor(Constants.casesColor) +
                 Text(" total cases")
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
             }
+            Chart(data, id: \.self) {
+                LineMark(
+                    x: .value("Date", $0.date.toDate() ?? Date()),
+                    y: .value("Deaths", $0.deaths ?? 0),
+                    series: .value("Type", "Deaths")
+                )
+                .foregroundStyle(Constants.deathsColor)
+            }
+            .frame(height: chartHeight)
             VStack(alignment: .leading) {
                 Text(viewModel.weeklyLatestDeaths)
                     .font(Font.title2.bold())
                     .foregroundColor(Constants.deathsColor) +
                 Text(viewModel.weeklyDeathsChange)
                     .font(Font.title2.bold())
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                 Group {
                     Text("new weekly deaths until ") +
                     Text(viewModel.latestDataPointDate, style: .date)
                 }
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
             }
             VStack(alignment: .leading) {
                 Text(viewModel.totalDeaths)
                     .font(Font.title2.bold())
                     .foregroundColor(Constants.deathsColor) +
                 Text(" total deaths")
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
             }
         }
-        .padding(.vertical)
+        .padding()
     }
 
     private func reloadDataAndWidget() {
@@ -148,8 +139,11 @@ struct ContentView: View {
     }
 
     private var data: [Info] {
-        showRelativeChartData ? viewModel.data.suffix(casesChartCount.numberOfDatapoints) :
-        viewModel.data.suffix(casesChartCount.numberOfDatapoints)
+        guard viewModel.data.count > casesChartCount.numberOfDatapoints else {
+            return viewModel.data
+        }
+
+        return Array(viewModel.data.prefix(upTo: casesChartCount.numberOfDatapoints))
     }
 
     private var sortButton: some View {

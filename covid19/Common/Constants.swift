@@ -18,11 +18,11 @@ enum Location: String, CaseIterable, Identifiable {
 }
 
 enum ChartCount: String, CaseIterable, Identifiable {
-    case oneMonth = "1M"
-    case threeMonths = "3M"
-    case sixMonths = "6M"
-    case oneYear = "1Y"
     case all = "ALL"
+    case oneYear = "1Y"
+    case sixMonths = "6M"
+    case threeMonths = "3M"
+    case oneMonth = "1M"
     var id: String { self.rawValue }
 
     var numberOfDatapoints: Int {
@@ -33,7 +33,7 @@ enum ChartCount: String, CaseIterable, Identifiable {
             .oneYear: 365
         ]
         // services return max of 1000 items
-        return dataPoints[self] ?? 1_000
+        return dataPoints[self] ?? 1000
     }
 }
 

@@ -27,6 +27,8 @@
 		FCA371882529D34D00CD24C3 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA371862529D34D00CD24C3 /* Constants.swift */; };
 		FCBFDCB02753FF7700AF2C5D /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBFDCAF2753FF7700AF2C5D /* Int+Extensions.swift */; };
 		FCBFDCB12753FF7700AF2C5D /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBFDCAF2753FF7700AF2C5D /* Int+Extensions.swift */; };
+		FCC0C105288C1030007E8E3F /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCC0C104288C1030007E8E3F /* String+Extensions.swift */; };
+		FCC0C106288C1030007E8E3F /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCC0C104288C1030007E8E3F /* String+Extensions.swift */; };
 		FCCACA6525EAC4D100C3E0FF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCACA6425EAC4D100C3E0FF /* WebView.swift */; };
 		FCCACA6A25EAC52100C3E0FF /* RNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCACA6925EAC52100C3E0FF /* RNumberView.swift */; };
 		FCCACA7625EACADA00C3E0FF /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCACA7525EACADA00C3E0FF /* SourceView.swift */; };
@@ -76,6 +78,7 @@
 		FCA371812529D2C700CD24C3 /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		FCA371862529D34D00CD24C3 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FCBFDCAF2753FF7700AF2C5D /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
+		FCC0C104288C1030007E8E3F /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		FCCACA6425EAC4D100C3E0FF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		FCCACA6925EAC52100C3E0FF /* RNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNumberView.swift; sourceTree = "<group>"; };
 		FCCACA7525EACADA00C3E0FF /* SourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 			children = (
 				FCBFDCAF2753FF7700AF2C5D /* Int+Extensions.swift */,
 				FCA371812529D2C700CD24C3 /* Double+Extensions.swift */,
+				FCC0C104288C1030007E8E3F /* String+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -335,6 +339,7 @@
 				FC4100902520EE0800F931CC /* ContentView.swift in Sources */,
 				FCCACA6A25EAC52100C3E0FF /* RNumberView.swift in Sources */,
 				FCCACA7625EACADA00C3E0FF /* SourceView.swift in Sources */,
+				FCC0C105288C1030007E8E3F /* String+Extensions.swift in Sources */,
 				FC41009F2521083B00F931CC /* ViewModel.swift in Sources */,
 				FC31B719272F05B300AC806E /* LocalNotifier.swift in Sources */,
 				FC41008E2520EE0800F931CC /* Covid19App.swift in Sources */,
@@ -353,6 +358,7 @@
 				FCA371832529D2C700CD24C3 /* Double+Extensions.swift in Sources */,
 				FC6DCF23252269F900D38990 /* Info.swift in Sources */,
 				FCA371882529D34D00CD24C3 /* Constants.swift in Sources */,
+				FCC0C106288C1030007E8E3F /* String+Extensions.swift in Sources */,
 				FCBFDCB12753FF7700AF2C5D /* Int+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

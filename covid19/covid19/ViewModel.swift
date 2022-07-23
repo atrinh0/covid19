@@ -102,9 +102,8 @@ final class ViewModel: ObservableObject {
             totalCases = latestRecord.totalCases?.formattedWithSeparator ?? "0"
             totalDeaths = latestRecord.totalDeaths?.formattedWithSeparator ?? "0"
 
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            if let date = dateFormatter.date(from: latestRecord.date) {
+            if let date = latestRecord.date.toDate() {
+                let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "EEEE dd MMMM"
                 latestDate = dateFormatter.string(from: date)
                 latestDataPointDate = date

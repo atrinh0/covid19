@@ -14,9 +14,8 @@ enum LocalNotifier {
         guard let latestRecord = infoArray.first else { return }
 
         var contentTitle = ""
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        if let date = dateFormatter.date(from: latestRecord.date) {
+        if let date = latestRecord.date.toDate() {
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "EEEE d MMMM"
             contentTitle = "Latest update for \(dateFormatter.string(from: date))"
         }
