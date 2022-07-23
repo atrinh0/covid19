@@ -80,7 +80,9 @@ struct ContentView: View {
                 Text(viewModel.totalCases)
                     .font(Font.title2.bold())
                     .foregroundColor(Constants.casesColor) +
-                Text(" total cases")
+                Text(" total cases up to ")
+                    .foregroundColor(.secondary) +
+                Text(viewModel.latestDataPointDate, style: .date)
                     .foregroundColor(.secondary)
             }
             Chart(data, id: \.self) {
@@ -109,8 +111,11 @@ struct ContentView: View {
                 Text(viewModel.totalDeaths)
                     .font(Font.title2.bold())
                     .foregroundColor(Constants.deathsColor) +
-                Text(" total deaths")
+                Text(" total deaths up to ")
+                    .foregroundColor(.secondary) +
+                Text(viewModel.latestDataPointDate, style: .date)
                     .foregroundColor(.secondary)
+                
             }
         }
         .padding()

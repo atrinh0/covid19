@@ -110,6 +110,13 @@ final class ViewModel: ObservableObject {
             }
         }
 
+        if totalCases == "0" || totalDeaths == "0",
+            data.count > 1 {
+            let secondRecord = data[1]
+            totalCases = secondRecord.totalCases?.formattedWithSeparator ?? "0"
+            totalDeaths = secondRecord.totalDeaths?.formattedWithSeparator ?? "0"
+        }
+
         calculateWeeklyChange()
     }
 
