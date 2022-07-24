@@ -50,7 +50,7 @@ final class ViewModel: ObservableObject {
                     }
                 }
                 let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
-                self.data = responseData.data.map { Info(response: $0) }
+                self.data = responseData.data.compactMap { Info(response: $0) }
                 lastChecked = Date()
             } catch {
                 self.error = error.localizedDescription
@@ -99,8 +99,8 @@ final class ViewModel: ObservableObject {
         updateFooterText()
 
         if let latestRecord = data.first {
-            totalCases = latestRecord.totalCases?.formattedWithSeparator ?? "0"
-            totalDeaths = latestRecord.totalDeaths?.formattedWithSeparator ?? "0"
+            totalCases = latestRecord.totalCases.formattedWithSeparator
+            totalDeaths = latestRecord.totalDeaths.formattedWithSeparator
 
             if let date = latestRecord.date.toDate() {
                 let dateFormatter = DateFormatter()
@@ -108,13 +108,6 @@ final class ViewModel: ObservableObject {
                 latestDate = dateFormatter.string(from: date)
                 latestDataPointDate = date
             }
-        }
-
-        if totalCases == "0" || totalDeaths == "0",
-            data.count > 1 {
-            let secondRecord = data[1]
-            totalCases = secondRecord.totalCases?.formattedWithSeparator ?? "0"
-            totalDeaths = secondRecord.totalDeaths?.formattedWithSeparator ?? "0"
         }
 
         calculateWeeklyChange()

@@ -57,7 +57,7 @@ struct ContentView: View {
             Chart(data, id: \.self) {
                 LineMark(
                     x: .value("Date", $0.date.toDate() ?? Date()),
-                    y: .value("Cases", $0.cases ?? 0),
+                    y: .value("Cases", $0.cases),
                     series: .value("Type", "Cases")
                 )
                 .foregroundStyle(Constants.casesColor)
@@ -88,7 +88,7 @@ struct ContentView: View {
             Chart(data, id: \.self) {
                 LineMark(
                     x: .value("Date", $0.date.toDate() ?? Date()),
-                    y: .value("Deaths", $0.deaths ?? 0),
+                    y: .value("Deaths", $0.deaths),
                     series: .value("Type", "Deaths")
                 )
                 .foregroundStyle(Constants.deathsColor)

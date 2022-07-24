@@ -7,17 +7,21 @@
 
 struct Info: Hashable {
     let date: String
-    let cases: Int?
-    let totalCases: Int?
-    let deaths: Int?
-    let totalDeaths: Int?
+    let cases: Int
+    let totalCases: Int
+    let deaths: Int
+    let totalDeaths: Int
 
-    init(response: ResponseInfo) {
+    init?(response: ResponseInfo) {
+        guard let cases = response.newCasesBySpecimenDate,
+              let totalCases = response.cumCasesBySpecimenDate,
+              let deaths = response.newDeaths28DaysByDeathDate,
+              let totalDeaths = response.cumDeaths28DaysByDeathDate else { return nil }
         self.date = response.date
-        self.cases = response.newCasesBySpecimenDate
-        self.totalCases = response.cumCasesBySpecimenDate
-        self.deaths = response.newDeaths28DaysByDeathDate
-        self.totalDeaths = response.cumDeaths28DaysByDeathDate
+        self.cases = cases
+        self.totalCases = totalCases
+        self.deaths = deaths
+        self.totalDeaths = totalDeaths
     }
 }
 

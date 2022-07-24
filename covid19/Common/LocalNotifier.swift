@@ -41,32 +41,24 @@ enum LocalNotifier {
     private static func getContentBody(infoArray: [Info]) -> String {
         guard let latestRecord = infoArray.first else { return "" }
 
-        var latestCases = "0"
-        var latestDeaths = "0"
-        if let cases = latestRecord.cases, cases > 0 {
-            latestCases = cases.formattedWithSeparator
-        }
-        if let deaths = latestRecord.deaths, deaths > 0 {
-            latestDeaths = deaths.formattedWithSeparator
-        }
+        let latestCases = latestRecord.cases.formattedWithSeparator
+        let latestDeaths = latestRecord.deaths.formattedWithSeparator
 
-        let totalCases = latestRecord.totalCases?.formattedWithSeparator ?? "0"
-        let totalDeaths = latestRecord.totalDeaths?.formattedWithSeparator ?? "0"
+        let totalCases = latestRecord.totalCases.formattedWithSeparator
+        let totalDeaths = latestRecord.totalDeaths.formattedWithSeparator
 
         var casesChange = ""
         var deathsChange = ""
+
         if infoArray.count > 1 {
             let secondRecord = infoArray[1]
-            if let cases = latestRecord.cases, let dayBeforeCases = secondRecord.cases {
-                let difference = cases - dayBeforeCases
-                let minusOrPlus = difference < 0 ? "-" : "+"
-                casesChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
-            }
-            if let deaths = latestRecord.deaths, let dayBeforeDeaths = secondRecord.deaths {
-                let difference = deaths - dayBeforeDeaths
-                let minusOrPlus = difference < 0 ? "-" : "+"
-                deathsChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
-            }
+            var difference = latestRecord.cases - secondRecord.cases
+            var minusOrPlus = difference < 0 ? "-" : "+"
+            casesChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
+
+            difference = latestRecord.deaths - secondRecord.deaths
+            minusOrPlus = difference < 0 ? "-" : "+"
+            deathsChange = " (\(minusOrPlus)\(abs(difference).formattedWithSeparator))"
         }
 
         return """

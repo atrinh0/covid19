@@ -43,7 +43,7 @@ struct Provider: TimelineProvider {
         let request = URLRequest(url: url)
         let (data, response) = try await session.data(for: request)
         let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
-        let infoArray = responseData.data.map { Info(response: $0) }
+        let infoArray = responseData.data.compactMap { Info(response: $0) }
         let entry = SimpleEntry(infoArray: infoArray, response: response)
         return entry
     }
@@ -68,16 +68,16 @@ struct SimpleEntry: TimelineEntry {
 
     init(date: Date? = Date(), infoArray: [Info], response: URLResponse?) {
         self.date = date ?? Date()
-        if let firstRecord = infoArray.first, let cases = firstRecord.cases, let deaths = firstRecord.deaths {
-            self.cases = cases
-            self.deaths = deaths
+        if let firstRecord = infoArray.first {
+            self.cases = firstRecord.cases
+            self.deaths = firstRecord.deaths
         } else {
             self.cases = 0
             self.deaths = 0
         }
 
-        let casesArray = infoArray.map { Double($0.cases ?? 0) }
-        let deathsArray = infoArray.map { Double($0.deaths ?? 0) }
+        let casesArray = infoArray.map { Double($0.cases) }
+        let deathsArray = infoArray.map { Double($0.deaths) }
         let maxCasesScalingValue = (casesArray.max() ?? 1.0) * 1.05
         let maxDeathsScalingValue = (deathsArray.max() ?? 1.0) * 1.05 * 2
         self.casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
