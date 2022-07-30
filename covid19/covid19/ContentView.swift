@@ -51,6 +51,7 @@ struct ContentView: View {
                 ForEach(ChartCount.allCases) {
                     Text($0.rawValue)
                         .tag($0)
+                        .accessibilityLabel(Text($0.voiceoverDescription))
                 }
             } label: { }
             .pickerStyle(.segmented)
@@ -161,6 +162,7 @@ struct ContentView: View {
         } label: {
             Image(systemName: "chevron.down.circle.fill")
                 .font(Font.title2.bold())
+                .accessibilityLabel(Text("Select nation"))
         }
         .onChange(of: locationSelection) { _ in
             reloadData()

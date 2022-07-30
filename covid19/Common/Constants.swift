@@ -37,6 +37,23 @@ enum ChartCount: String, CaseIterable, Identifiable {
         // services return max of 1000 items
         return dataPoints[self] ?? 1000
     }
+
+    var voiceoverDescription: String {
+        switch self {
+        case .all:
+            return "All data"
+        case .twoYears:
+            return "Two years"
+        case .oneYear:
+            return "One year"
+        case .sixMonths:
+            return "Six months"
+        case .threeMonths:
+            return "Three months"
+        case .oneMonth:
+            return "One month"
+        }
+    }
 }
 
 enum Constants {
