@@ -83,7 +83,7 @@ struct Covid19App: App {
             TabView {
                 ContentView()
                     .tabItem {
-                        Label("Graphs", systemImage: "chart.bar.xaxis")
+                        Label("Graphs", systemImage: "chart.xyaxis.line")
                     }
                 SourceView()
                     .tabItem {
