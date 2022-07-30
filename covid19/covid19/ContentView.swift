@@ -16,7 +16,6 @@ struct ContentView: View {
     @State private var casesChartCount: ChartCount = .sixMonths
 
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
-    private let chartHeight: CGFloat = 200
 
     var body: some View {
         NavigationView {
@@ -55,15 +54,7 @@ struct ContentView: View {
                 }
             } label: { }
             .pickerStyle(.segmented)
-            Chart(data, id: \.self) {
-                LineMark(
-                    x: .value("Date", $0.date.toDate() ?? Date()),
-                    y: .value("Cases", $0.cases),
-                    series: .value("Type", "Cases")
-                )
-                .foregroundStyle(Constants.casesColor)
-            }
-            .frame(height: chartHeight)
+            CasesChart(data: data)
             VStack(alignment: .leading) {
                 Text(viewModel.weeklyLatestCases)
                     .font(Font.title2.bold())
@@ -89,12 +80,11 @@ struct ContentView: View {
             Chart(data, id: \.self) {
                 LineMark(
                     x: .value("Date", $0.date.toDate() ?? Date()),
-                    y: .value("Deaths", $0.deaths),
-                    series: .value("Type", "Deaths")
+                    y: .value("Deaths", $0.deaths)
                 )
                 .foregroundStyle(Constants.deathsColor)
             }
-            .frame(height: chartHeight)
+            .frame(height: Constants.chartHeight)
             VStack(alignment: .leading) {
                 Text(viewModel.weeklyLatestDeaths)
                     .font(Font.title2.bold())
@@ -167,6 +157,58 @@ struct ContentView: View {
         .onChange(of: locationSelection) { _ in
             reloadData()
         }
+    }
+}
+
+struct CasesChart: View {
+    var data: [Info]
+
+    var body: some View {
+        Chart(data, id: \.self) {
+            LineMark(
+                x: .value("Date", $0.date.toDate() ?? Date()),
+                y: .value("Cases", $0.cases)
+            )
+            .foregroundStyle(Constants.casesColor)
+        }
+        .frame(height: Constants.chartHeight)
+        .accessibilityElement()
+        .accessibilityChartDescriptor(self)
+    }
+}
+
+extension CasesChart: AXChartDescriptorRepresentable {
+    func makeChartDescriptor() -> AXChartDescriptor {
+        let xAxis = AXCategoricalDataAxisDescriptor(
+            title: "Date",
+            categoryOrder: data.map(\.date)
+        )
+
+        let min = Double(data.map(\.cases).min() ?? 0)
+        let max = Double(data.map(\.cases).max() ?? 0)
+
+        let yAxis = AXNumericDataAxisDescriptor(
+            title: "Cases",
+            range: min...max,
+            gridlinePositions: []
+        ) { value in "\(value) cases" }
+
+        let series = AXDataSeriesDescriptor(
+            name: "Cases",
+            isContinuous: true,
+            dataPoints: data.map {
+                .init(x: $0.date, y: Double($0.cases))
+            }
+        )
+
+        return AXChartDescriptor(
+            title: "Cases chart",
+            summary: nil,
+            xAxis: xAxis,
+            yAxis: yAxis,
+            additionalAxes: [],
+            series: [series]
+        )
     }
 }
 
