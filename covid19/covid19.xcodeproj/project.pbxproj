@@ -29,6 +29,8 @@
 		FCBFDCB12753FF7700AF2C5D /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBFDCAF2753FF7700AF2C5D /* Int+Extensions.swift */; };
 		FCC0C105288C1030007E8E3F /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCC0C104288C1030007E8E3F /* String+Extensions.swift */; };
 		FCC0C106288C1030007E8E3F /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCC0C104288C1030007E8E3F /* String+Extensions.swift */; };
+		FCC5EF2828958AFE0070903D /* CasesChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCC5EF2728958AFE0070903D /* CasesChart.swift */; };
+		FCC5EF2A28958B210070903D /* DeathsChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCC5EF2928958B210070903D /* DeathsChart.swift */; };
 		FCCACA6525EAC4D100C3E0FF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCACA6425EAC4D100C3E0FF /* WebView.swift */; };
 		FCCACA6A25EAC52100C3E0FF /* RNumberView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCACA6925EAC52100C3E0FF /* RNumberView.swift */; };
 		FCCACA7625EACADA00C3E0FF /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCCACA7525EACADA00C3E0FF /* SourceView.swift */; };
@@ -79,6 +81,8 @@
 		FCA371862529D34D00CD24C3 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		FCBFDCAF2753FF7700AF2C5D /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 		FCC0C104288C1030007E8E3F /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		FCC5EF2728958AFE0070903D /* CasesChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasesChart.swift; sourceTree = "<group>"; };
+		FCC5EF2928958B210070903D /* DeathsChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeathsChart.swift; sourceTree = "<group>"; };
 		FCCACA6425EAC4D100C3E0FF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		FCCACA6925EAC52100C3E0FF /* RNumberView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNumberView.swift; sourceTree = "<group>"; };
 		FCCACA7525EACADA00C3E0FF /* SourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
@@ -128,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				FCCACA6825EAC50C00C3E0FF /* Views */,
+				FCC5EF2628958AEE0070903D /* Charts */,
 				FC41008D2520EE0800F931CC /* Covid19App.swift */,
 				FC41009E2521083B00F931CC /* ViewModel.swift */,
 				FC41008F2520EE0800F931CC /* ContentView.swift */,
@@ -195,6 +200,15 @@
 				FCC0C104288C1030007E8E3F /* String+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		FCC5EF2628958AEE0070903D /* Charts */ = {
+			isa = PBXGroup;
+			children = (
+				FCC5EF2728958AFE0070903D /* CasesChart.swift */,
+				FCC5EF2928958B210070903D /* DeathsChart.swift */,
+			);
+			path = Charts;
 			sourceTree = "<group>";
 		};
 		FCCACA6825EAC50C00C3E0FF /* Views */ = {
@@ -340,7 +354,9 @@
 				FCCACA6A25EAC52100C3E0FF /* RNumberView.swift in Sources */,
 				FCCACA7625EACADA00C3E0FF /* SourceView.swift in Sources */,
 				FCC0C105288C1030007E8E3F /* String+Extensions.swift in Sources */,
+				FCC5EF2828958AFE0070903D /* CasesChart.swift in Sources */,
 				FC41009F2521083B00F931CC /* ViewModel.swift in Sources */,
+				FCC5EF2A28958B210070903D /* DeathsChart.swift in Sources */,
 				FC31B719272F05B300AC806E /* LocalNotifier.swift in Sources */,
 				FC41008E2520EE0800F931CC /* Covid19App.swift in Sources */,
 				FCBFDCB02753FF7700AF2C5D /* Int+Extensions.swift in Sources */,
