@@ -179,10 +179,11 @@ struct CasesChart: View {
 
 extension CasesChart: AXChartDescriptorRepresentable {
     func makeChartDescriptor() -> AXChartDescriptor {
-        let xAxis = AXCategoricalDataAxisDescriptor(
+        let xAxis = AXNumericDataAxisDescriptor(
             title: "Date",
-            categoryOrder: data.map(\.date)
-        )
+            range: Double(0)...Double(data.count),
+            gridlinePositions: []
+        ) { dateDescription(dateString: data.reversed()[Int($0)].date) }
 
         let min = Double(data.map(\.cases).min() ?? 0)
         let max = Double(data.map(\.cases).max() ?? 0)
@@ -191,13 +192,14 @@ extension CasesChart: AXChartDescriptorRepresentable {
             title: "Cases",
             range: min...max,
             gridlinePositions: []
-        ) { value in "\(value) cases" }
+        ) { value in "\(Int(value)) cases" }
 
         let series = AXDataSeriesDescriptor(
             name: "Cases",
             isContinuous: true,
-            dataPoints: data.map {
-                .init(x: $0.date, y: Double($0.cases))
+            dataPoints: data.reversed().enumerated().map { index, point in
+                .init(x: Double(index),
+                      y: Double(point.cases))
             }
         )
 
@@ -209,6 +211,11 @@ extension CasesChart: AXChartDescriptorRepresentable {
             additionalAxes: [],
             series: [series]
         )
+    }
+
+    private func dateDescription(dateString: String) -> String {
+        let date = dateString.toDate() ?? Date()
+        return date.formatted(date: .complete, time: .omitted)
     }
 }
 
