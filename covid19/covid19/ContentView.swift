@@ -54,6 +54,15 @@ struct ContentView: View {
             } label: { }
             .pickerStyle(.segmented)
             CasesChart(data: data)
+            casesSummary
+            DeathsChart(data: data)
+            deathsSummary
+        }
+        .padding()
+    }
+
+    private var casesSummary: some View {
+        Group {
             VStack(alignment: .leading) {
                 Text(viewModel.weeklyLatestCases)
                     .font(Font.title2.bold())
@@ -76,7 +85,11 @@ struct ContentView: View {
                 Text(viewModel.latestDataPointDate, style: .date)
                     .foregroundColor(.secondary)
             }
-            DeathsChart(data: data)
+        }
+    }
+
+    private var deathsSummary: some View {
+        Group {
             VStack(alignment: .leading) {
                 Text(viewModel.weeklyLatestDeaths)
                     .font(Font.title2.bold())
@@ -100,7 +113,6 @@ struct ContentView: View {
                     .foregroundColor(.secondary)
             }
         }
-        .padding()
     }
 
     private func reloadDataAndWidget() {
