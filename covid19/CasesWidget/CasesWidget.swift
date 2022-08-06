@@ -83,7 +83,7 @@ struct SimpleEntry: TimelineEntry {
         self.casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
         self.deathsData = deathsArray.map { $0/maxDeathsScalingValue }.reversed()
 
-        if let response = response,
+        if let response,
             let urlReponse = response as? HTTPURLResponse,
             let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
             lastUpdated = lastModified
@@ -179,7 +179,7 @@ struct WidgetView: View {
     }
 
     private func formatCount(val: Int?) -> String {
-        if let val = val {
+        if let val {
             return "\(val.formattedWithSeparator)"
         }
         return " "

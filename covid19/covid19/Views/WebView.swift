@@ -30,12 +30,12 @@ struct WebView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: WKWebView, context: Context) {
-        guard let url = url else { return }
+        guard let url else { return }
         uiView.load(URLRequest(url: url))
     }
 
     func reloadWebView() {
-        guard let url = url else { return }
+        guard let url else { return }
         webView.load(URLRequest(url: url))
     }
 }

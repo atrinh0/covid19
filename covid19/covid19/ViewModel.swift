@@ -143,7 +143,7 @@ final class ViewModel: ObservableObject {
     }
 
     @objc private func updateFooterText() {
-        if let error = error {
+        if let error {
             footerText = error
             return
         }
