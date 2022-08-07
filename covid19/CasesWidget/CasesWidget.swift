@@ -37,14 +37,14 @@ struct Provider: TimelineProvider {
     }
 
     private func simpleEntry(in context: Context) async throws -> SimpleEntry {
-        guard let url = URL(string: Constants.url()) else {
+        guard let url = URL(string: Constants.url(location: .england)) else {
             return placeholder(in: context)
         }
         let request = URLRequest(url: url)
-        let (data, response) = try await session.data(for: request)
+        let (data, _) = try await session.data(for: request)
         let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
         let infoArray = responseData.data.compactMap { Info(response: $0) }
-        let entry = SimpleEntry(infoArray: infoArray, response: response)
+        let entry = SimpleEntry(infoArray: infoArray)
         return entry
     }
 }
@@ -55,7 +55,7 @@ struct SimpleEntry: TimelineEntry {
     let deaths: Int?
     let casesData: [Double]
     let deathsData: [Double]
-    let lastUpdated: String
+    let latestDataPoint: Date
 
     init(date: Date, cases: Int, deaths: Int, casesData: [Double], deathsData: [Double]) {
         self.date = date
@@ -63,33 +63,25 @@ struct SimpleEntry: TimelineEntry {
         self.deaths = deaths
         self.casesData = casesData
         self.deathsData = deathsData
-        self.lastUpdated = ""
+        self.latestDataPoint = .distantPast
     }
 
-    init(date: Date? = Date(), infoArray: [Info], response: URLResponse?) {
+    init(date: Date? = Date(), infoArray: [Info]) {
         self.date = date ?? Date()
         if let firstRecord = infoArray.first {
             self.cases = firstRecord.cases
             self.deaths = firstRecord.deaths
+            self.latestDataPoint = firstRecord.date.toDate() ?? .distantPast
         } else {
             self.cases = 0
             self.deaths = 0
+            self.latestDataPoint = .distantPast
         }
 
         let casesArray = infoArray.map { Double($0.cases) }
         let deathsArray = infoArray.map { Double($0.deaths) }
-        let maxCasesScalingValue = (casesArray.max() ?? 1.0) * 1.05
-        let maxDeathsScalingValue = (deathsArray.max() ?? 1.0) * 1.05 * 2
-        self.casesData = casesArray.map { $0/maxCasesScalingValue }.reversed()
-        self.deathsData = deathsArray.map { $0/maxDeathsScalingValue }.reversed()
-
-        if let response,
-            let urlReponse = response as? HTTPURLResponse,
-            let lastModified = urlReponse.allHeaderFields[Constants.lastModifiedHeaderFieldKey] as? String {
-            lastUpdated = lastModified
-        } else {
-            lastUpdated = ""
-        }
+        self.casesData = casesArray.reversed()
+        self.deathsData = deathsArray.reversed()
     }
 }
 
@@ -117,8 +109,8 @@ struct WidgetView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             ZStack(alignment: .topLeading) {
-                Text(lastUpdated(val: entry.lastUpdated))
-                    .font(Font.title3.bold())
+                Text(entry.latestDataPoint, style: .relative)
+                    .font(.caption.weight(.bold))
                     .foregroundColor(.primary)
                     .opacity(0.2)
                     .padding(.horizontal, 7)
