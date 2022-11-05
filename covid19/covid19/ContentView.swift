@@ -21,9 +21,12 @@ struct ContentView: View {
             ScrollView {
                 chartAndDataView
             }
-            .navigationTitle(Text(locationSelection.rawValue))
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: sortButton)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    sortButton
+                }
+            }
             .refreshable {
                 reloadDataAndWidget()
             }
@@ -154,13 +157,21 @@ struct ContentView: View {
                 }
             } label: { Text("Location") }
         } label: {
-            Image(systemName: "chevron.down.circle.fill")
-                .font(Font.title2.bold())
-                .accessibilityLabel(Text("Select nation"))
+            HStack {
+                Text(locationSelection.rawValue)
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                Image(systemName: "chevron.down.circle.fill")
+                    .font(.callout.bold())
+                    .accessibilityLabel(Text("Select nation"))
+                    .foregroundStyle(Color.accentColor)
+            }
         }
         .onChange(of: locationSelection) { _ in
             reloadData()
         }
+        .animation(.none, value: locationSelection)
+        .foregroundStyle(.primary)
     }
 }
 
