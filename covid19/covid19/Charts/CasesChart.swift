@@ -90,6 +90,13 @@ struct CasesChart: View {
                 }
             }
         }
+        .onChange(of: data) { newData in
+            if let selectedElement {
+                if !newData.contains(selectedElement) || newData.isEmpty {
+                    self.selectedElement = nil
+                }
+            }
+        }
     }
 
     private func findElement(location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) -> Info? {
