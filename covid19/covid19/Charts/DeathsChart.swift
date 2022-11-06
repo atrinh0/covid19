@@ -14,7 +14,7 @@ struct DeathsChart: View {
     var body: some View {
         Chart(data, id: \.self) {
             LineMark(
-                x: .value("Date", $0.date.toDate() ?? Date()),
+                x: .value("Date", $0.day),
                 y: .value("Deaths", $0.deaths)
             )
             .foregroundStyle(Constants.deathsColor)

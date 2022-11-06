@@ -9,12 +9,14 @@ import SwiftUI
 import Charts
 
 struct CasesChart: View {
+    @State private var selectedElement: Info?
+
     var data: [Info]
 
     var body: some View {
         Chart(data, id: \.self) {
             LineMark(
-                x: .value("Date", $0.date.toDate() ?? Date()),
+                x: .value("Date", $0.day),
                 y: .value("Cases", $0.cases)
             )
             .foregroundStyle(Constants.casesColor)
@@ -22,6 +24,91 @@ struct CasesChart: View {
         .frame(height: Constants.chartHeight)
         .accessibilityElement()
         .accessibilityChartDescriptor(self)
+        .chartOverlay { proxy in
+            GeometryReader { geo in
+                Rectangle().fill(.clear).contentShape(Rectangle())
+                    .gesture(
+                        SpatialTapGesture()
+                            .onEnded { value in
+                                let element = findElement(location: value.location, proxy: proxy, geometry: geo)
+                                if selectedElement?.day == element?.day {
+                                    selectedElement = nil
+                                } else {
+                                    selectedElement = element
+                                }
+                            }
+                            .exclusively(
+                                before: DragGesture()
+                                    .onChanged { value in
+                                        selectedElement = findElement(location: value.location,
+                                                                      proxy: proxy,
+                                                                      geometry: geo)
+                                    }
+                            )
+                    )
+            }
+        }
+        .chartBackground { proxy in
+            ZStack(alignment: .topLeading) {
+                GeometryReader { geo in
+                    if let selectedElement,
+                       let dateInterval = Calendar.current.dateInterval(of: .day, for: selectedElement.day) {
+                        let startPositionX1 = proxy.position(forX: dateInterval.start) ?? 0
+
+                        let lineX = startPositionX1 + geo[proxy.plotAreaFrame].origin.x
+                        let lineHeight = geo[proxy.plotAreaFrame].maxY
+                        let boxWidth: CGFloat = 110
+                        let boxOffset = max(0, min(geo.size.width - boxWidth, lineX - boxWidth / 2))
+
+                        Rectangle()
+                            .fill(.blue)
+                            .frame(width: 2, height: lineHeight)
+                            .position(x: lineX, y: lineHeight / 2)
+
+                        VStack(alignment: .center) {
+                            Text("\(selectedElement.day, format: .dateTime.year().month().day())")
+                                .font(.callout.bold())
+                                .foregroundStyle(.primary)
+                            Text("\(selectedElement.cases, format: .number)")
+                                .font(.title2.bold())
+                                .foregroundColor(.primary)
+                        }
+                        .accessibilityElement(children: .combine)
+                        .frame(width: boxWidth, alignment: .center)
+                        .background {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(.background)
+                                RoundedRectangle(cornerRadius: 8)
+                                    .fill(.quaternary)
+                            }
+                            .padding(.horizontal, -8)
+                            .padding(.vertical, -4)
+                        }
+                        .offset(x: boxOffset)
+                    }
+                }
+            }
+        }
+    }
+
+    private func findElement(location: CGPoint, proxy: ChartProxy, geometry: GeometryProxy) -> Info? {
+        let relativeXPosition = location.x - geometry[proxy.plotAreaFrame].origin.x
+        if let date = proxy.value(atX: relativeXPosition) as Date? {
+            var minDistance: TimeInterval = .infinity
+            var index: Int?
+            for salesDataIndex in data.indices {
+                let nthSalesDataDistance = data[salesDataIndex].day.distance(to: date)
+                if abs(nthSalesDataDistance) < minDistance {
+                    minDistance = abs(nthSalesDataDistance)
+                    index = salesDataIndex
+                }
+            }
+            if let index {
+                return data[index]
+            }
+        }
+        return nil
     }
 }
 

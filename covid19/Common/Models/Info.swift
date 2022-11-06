@@ -5,6 +5,8 @@
 //  Created by An Trinh on 28/9/20.
 //
 
+import Foundation
+
 struct Info: Hashable {
     let date: String
     let cases: Int
@@ -22,6 +24,10 @@ struct Info: Hashable {
         self.totalCases = totalCases
         self.deaths = deaths
         self.totalDeaths = totalDeaths
+    }
+
+    var day: Date {
+        date.toDate() ?? Date()
     }
 }
 
