@@ -57,7 +57,7 @@ struct CasesChart: View {
 
                         let lineX = startPositionX1 + geo[proxy.plotAreaFrame].origin.x
                         let lineHeight = geo[proxy.plotAreaFrame].maxY
-                        let boxWidth: CGFloat = 110
+                        let boxWidth: CGFloat = 130
                         let boxOffset = max(0, min(geo.size.width - boxWidth, lineX - boxWidth / 2))
 
                         Rectangle()
@@ -68,11 +68,12 @@ struct CasesChart: View {
                         VStack(alignment: .center) {
                             Text("\(selectedElement.day, format: .dateTime.year().month().day())")
                                 .font(.callout.bold())
-                                .foregroundStyle(.primary)
                             Text("\(selectedElement.cases, format: .number)")
-                                .font(.title2.bold())
-                                .foregroundColor(.primary)
+                                .font(.title2.bold()) +
+                            Text(" cases")
+                                .font(.callout.bold())
                         }
+                        .foregroundStyle(.primary)
                         .accessibilityElement(children: .combine)
                         .frame(width: boxWidth, alignment: .center)
                         .background {
