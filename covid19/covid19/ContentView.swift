@@ -56,6 +56,7 @@ struct ContentView: View {
                 }
             } label: { }
             .pickerStyle(.segmented)
+            .padding(.bottom, 20)
             CasesChart(data: data)
             casesSummary
             DeathsChart(data: data)
