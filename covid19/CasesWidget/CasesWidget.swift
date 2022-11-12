@@ -13,7 +13,7 @@ struct Provider: TimelineProvider {
     private let session = URLSession.shared
 
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), cases: 0, deaths: 0, casesData: [], deathsData: [])
+        SimpleEntry(date: Date(), cases: 0, deaths: 0, infoArray: [])
     }
 
     func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> Void) {
@@ -53,16 +53,14 @@ struct SimpleEntry: TimelineEntry {
     let date: Date
     let cases: Int?
     let deaths: Int?
-    let casesData: [Double]
-    let deathsData: [Double]
+    let infoArray: [Info]
     let latestDataPoint: Date
 
-    init(date: Date, cases: Int, deaths: Int, casesData: [Double], deathsData: [Double]) {
+    init(date: Date, cases: Int, deaths: Int, infoArray: [Info]) {
         self.date = date
         self.cases = cases
         self.deaths = deaths
-        self.casesData = casesData
-        self.deathsData = deathsData
+        self.infoArray = infoArray
         self.latestDataPoint = .distantPast
     }
 
@@ -77,11 +75,7 @@ struct SimpleEntry: TimelineEntry {
             self.deaths = 0
             self.latestDataPoint = .distantPast
         }
-
-        let casesArray = infoArray.map { Double($0.cases) }
-        let deathsArray = infoArray.map { Double($0.deaths) }
-        self.casesData = casesArray.reversed()
-        self.deathsData = deathsArray.reversed()
+        self.infoArray = infoArray
     }
 }
 
@@ -109,19 +103,30 @@ struct WidgetView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             ZStack(alignment: .topLeading) {
-                Text(entry.latestDataPoint, style: .relative)
-                    .font(.caption.weight(.bold))
-                    .foregroundColor(.primary)
-                    .opacity(0.2)
-                    .padding(.horizontal, 7)
-//                Chart(data: entry.deathsData.suffix(isWide ? 183 : 91))
-//                    .chartStyle(
-//                        LineChartStyle(.line, lineColor: Constants.deathsColor, lineWidth: 2)
-//                    )
-//                Chart(data: entry.casesData.suffix(isWide ? 183 : 91))
-//                    .chartStyle(
-//                        LineChartStyle(.line, lineColor: Constants.casesColor, lineWidth: 2)
-//                    )
+                Group {
+                    Text(entry.latestDataPoint, style: .relative) +
+                    Text(" ago")
+                }
+                .font(.body.weight(.bold))
+                .foregroundColor(.primary)
+                .opacity(0.2)
+                .padding(.horizontal, 7)
+                Chart(entry.infoArray.prefix(isWide ? 183 : 91), id: \.self) {
+                    LineMark(
+                        x: .value("Date", $0.day),
+                        y: .value("Cases", $0.cases)
+                    )
+                    .foregroundStyle(by: .value("Type", "Cases"))
+                    LineMark(
+                        x: .value("Date", $0.day),
+                        y: .value("Deaths", $0.deaths)
+                    )
+                    .foregroundStyle(by: .value("Type", "Deaths"))
+                }
+                .chartXAxis(.hidden)
+                .chartYAxis(.hidden)
+                .chartLegend(.hidden)
+                .chartForegroundStyleScale(range: Gradient(colors: [Constants.casesColor, Constants.deathsColor]))
             }
             .padding(.horizontal, -7)
             if isWide {
@@ -130,7 +135,7 @@ struct WidgetView: View {
                         Text(formatCount(val: entry.cases))
                             .font(Font.title2.bold())
                             .foregroundColor(Constants.casesColor) +
-                            Text(" cases")
+                        Text(" cases")
                             .font(Font.caption.bold())
                         Spacer()
                     }
@@ -139,7 +144,7 @@ struct WidgetView: View {
                         Text(formatCount(val: entry.deaths))
                             .font(Font.title2.bold())
                             .foregroundColor(Constants.deathsColor) +
-                            Text(" deaths")
+                        Text(" deaths")
                             .font(Font.caption.bold())
                         Spacer()
                     }
@@ -151,14 +156,14 @@ struct WidgetView: View {
                         Text(formatCount(val: entry.cases))
                             .font(Font.title2.bold())
                             .foregroundColor(Constants.casesColor) +
-                            Text(" cases")
+                        Text(" cases")
                             .font(Font.caption.bold())
                     }
                     HStack {
                         Text(formatCount(val: entry.deaths))
                             .font(Font.title2.bold())
                             .foregroundColor(Constants.deathsColor) +
-                            Text(" deaths")
+                        Text(" deaths")
                             .font(Font.caption.bold())
                     }
                 }
@@ -221,7 +226,7 @@ struct CasesWidget: Widget {
 
 struct CasesWidget_Previews: PreviewProvider {
     static var previews: some View {
-        CasesWidgetEntryView(entry: SimpleEntry(date: Date(), cases: 0, deaths: 0, casesData: [], deathsData: []))
+        CasesWidgetEntryView(entry: SimpleEntry(date: Date(), cases: 0, deaths: 0, infoArray: []))
             .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }

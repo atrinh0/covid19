@@ -10,8 +10,8 @@ import WidgetKit
 
 struct ContentView: View {
     @Environment(\.openURL) var openURL
-    @State private var locationSelection: Location = .england
     @ObservedObject private var viewModel = ViewModel()
+    @State private var locationSelection: Location = .england
     @State private var casesChartCount: ChartCount = .sixMonths
 
     private let timer = Timer.publish(every: 60, on: .main, in: .common).autoconnect()
